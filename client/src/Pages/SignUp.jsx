@@ -4,6 +4,7 @@ import registerImage from "/src/register.avif"
 import googleIcon from "/src/googleIcon.webp"
 import { useNavigate } from 'react-router-dom';
 import { Alert, Spinner } from 'flowbite-react';
+import Oauth from './Components/Oauth';
 
 export default function SignUp() {
   const [formData, setFormData] = useState({});
@@ -117,11 +118,7 @@ export default function SignUp() {
         </form>
 
         <div className="text-center mt-4">
-          <span className="text-gray-600">Or continue with</span>
-          <button className="mt-2 w-full py-2 bg-white border border-gray-300 rounded hover:bg-gray-100 transition duration-300">
-            <img src={googleIcon} alt="Google" className="inline-block h-5 w-5 mr-2" />
-            Google
-          </button>
+<Oauth />
         </div>
 
         <div className="text-center mt-4">

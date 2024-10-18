@@ -52,3 +52,44 @@ export const signin = async(req,res,next) => {
         next(error);
     }
 }
+export const google = async (req, res, next) => {
+    const { name, email, googlePhotoUrl } = req.body;
+
+    try {
+        const user = await User.findOne({ email });
+        let token;
+        let responseUser;
+
+        if (user) {
+            // User exists, generate token
+            token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY);
+            const { password, ...rest } = user._doc; // Exclude password from response
+            responseUser = rest;
+        } else {
+            // New user registration
+            const generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
+            const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
+            const username = name.toLowerCase().split(' ').join('') + Math.random().toString(9).slice(-4); // Fixed case method
+
+            const newUser = new User({
+                username,
+                email,
+                password: hashedPassword,
+                profilePicture: googlePhotoUrl || 'defaultProfilePictureUrl', // Set a default picture if needed
+            });
+
+            await newUser.save();
+            token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET_KEY); // Use newUser._id for the token
+            const { password, ...rest } = newUser._doc; // Exclude password from response
+            responseUser = rest;
+        }
+
+        // Send response with token
+        res.status(200).cookie('access_token', token, {
+            httpOnly: true,
+        }).json(responseUser);
+        
+    } catch (error) {
+        next(error);
+    }
+};

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import registerImage from "/src/register.avif"
-import googleIcon from "/src/googleIcon.webp"
 import { useNavigate } from 'react-router-dom';
 import { Alert, Spinner } from 'flowbite-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice';
+import Oauth from './Components/Oauth';
 export default function SignIn() {
   const [formData, setFormData] = useState({});
   const { loading, error: errorMessage } = useSelector(state => state.user)
@@ -105,11 +105,7 @@ export default function SignIn() {
         </form>
 
         <div className="text-center mt-4">
-          <span className="text-gray-600">Or continue with</span>
-          <button className="mt-2 w-full py-2 bg-white border border-gray-300 rounded hover:bg-gray-100 transition duration-300">
-            <img src={googleIcon} alt="Google" className="inline-block h-5 w-5 mr-2" />
-            Google
-          </button>
+          <Oauth />
         </div>
 
         <div className="text-center mt-4">
