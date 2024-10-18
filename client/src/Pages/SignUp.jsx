@@ -5,11 +5,13 @@ import googleIcon from "/src/googleIcon.webp"
 import { useNavigate } from 'react-router-dom';
 import { Alert, Spinner } from 'flowbite-react';
 import Oauth from './Components/Oauth';
+import { useSelector } from 'react-redux';
 
 export default function SignUp() {
   const [formData, setFormData] = useState({});
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const theme = useSelector((state) => state.theme.currentTheme);
   const navigate = useNavigate();
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() })
@@ -33,7 +35,7 @@ export default function SignUp() {
         setErrorMessage(errorData.error || 'An unknown error occurred.');
         return;
       }
-      else{
+      else {
         navigate('/sign-in')
       }
       const responseData = await res.json();
@@ -52,7 +54,9 @@ export default function SignUp() {
 
 
   return (
-    <div className="relative grid items-center justify-center min-h-screen bg-gradient-to-br from-green-300 to-yellow-400 p-4">
+    <div className="relative grid items-center justify-center min-h-screen p-4"
+  >
+
       <motion.div
         className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full"
         initial={{ scale: 0.8 }}
@@ -118,7 +122,7 @@ export default function SignUp() {
         </form>
 
         <div className="text-center mt-4">
-<Oauth />
+          <Oauth />
         </div>
 
         <div className="text-center mt-4">

@@ -20,7 +20,7 @@ export default function App() {
     <Route path="/projects" element={<Projects />} />
     <Route path="/dashboard" element={<Dashboard />} />
   </Routes>
-  <Footer />
+  {/* <Footer /> */}
   </BrowserRouter>
   )
 }

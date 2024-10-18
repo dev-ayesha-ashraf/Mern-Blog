@@ -3,7 +3,7 @@ import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn, FaYoutube } from 're
 
 export default function Footer() {
   return (
-    <footer className="relative bottom-0 bg-[#DAA520] text-black py-4 px-6">
+    <footer className="relative bottom-0 text-black py-4 px-6">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* About Section */}
         {/* <div>
