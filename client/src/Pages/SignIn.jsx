@@ -4,11 +4,12 @@ import registerImage from "/src/register.avif"
 import googleIcon from "/src/googleIcon.webp"
 import { useNavigate } from 'react-router-dom';
 import { Alert, Spinner } from 'flowbite-react';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice';
 export default function SignIn() {
   const [formData, setFormData] = useState({});
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const { loading, error: errorMessage } = useSelector(state => state.user)
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() })
@@ -17,34 +18,31 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
-      return setErrorMessage('Please Fill Out All The Fields.');
+      return dispatch(signInFailure('Please Fill Out All The Fields'))
     }
     try {
-      setLoading(true);
-      setErrorMessage(null);
+      dispatch(signInSuccess());
       const res = await fetch('/api/auth/signin', {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-  
+
       const responseData = await res.json();
       if (!res.ok) {
-        setErrorMessage(responseData.message || 'An unknown error occurred.');
-        setLoading(false);
-        return;
+        dispatch(signInFailure(responseData.message))
       }
-  
-      // If login is successful, redirect
-      navigate('/');
-      console.log('Login successful');
+      else {
+        dispatch(signInSuccess(responseData))
+        navigate('/');
+        console.log('Login successful');
+      }
+
     } catch (error) {
-      setErrorMessage(error.message);
-    } finally {
-      setLoading(false); // Ensure loader stops in all cases
+      dispatch(signInFailure(error.message))
     }
   };
-  
+
 
 
 
