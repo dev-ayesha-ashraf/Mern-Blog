@@ -96,7 +96,7 @@ export default function Header() {
                     ) :
                         (
                             <Link to="/sign-in">
-                                <button className={`px-6 py-3 font-bold rounded-md shadow-lg transition duration-300 max-[600px]:px-2 py-2 font-medium ${theme === 'dark' ? 'bg-purple-700 hover:bg-purple-600 text-white' : 'bg-gradient-to-r from-teal-400 via-green-300 to-lime-500 text-black hover:opacity-90'}`}>
+                                <button className={`px-6 py-3 font-bold rounded-md shadow-lg transition duration-300 max-[600px]:px-2 py-2 font-medium ${theme === 'dark' ? 'bg-gradient-to-r from-teal-500 to-teal-700 text-white' : 'bg-gradient-to-r from-blue-400 to-blue-600 to-lime-500 text-black hover:opacity-90'}`}>
                                     Sign In
                                 </button>
                             </Link>
