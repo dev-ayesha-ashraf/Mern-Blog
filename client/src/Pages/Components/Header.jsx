@@ -3,10 +3,14 @@ import { Link, useLocation } from "react-router-dom";
 import logo from "/src/logo6.jpg";
 import { AiOutlineSearch, AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { FaMoon } from "react-icons/fa";
+import { useSelector } from 'react-redux'
+import { Avatar, Dropdown } from 'flowbite-react'
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
     const Path = useLocation().pathname;
+    const { currentUser } = useSelector(state => state.user);
+    console.log(currentUser);
 
     const toggleNavbar = () => {
         setIsOpen(!isOpen);
@@ -35,16 +39,69 @@ export default function Header() {
             <button className="w-12 h-10 lg:hidden text-xl" onClick={toggleNavbar}>
                 <AiOutlineSearch />
             </button>
-
+            {/* Desktop Navigation Links */}
+            <div className="hidden lg:flex gap-4">
+                <Link to="/" className={`my-2 ${Path === '/' ? 'text-green-500 font-bold' : 'text-gray-800 hover:text-green-500'}`}>
+                    Home
+                </Link>
+                <Link to="/about" className={`my-2 ${Path === '/about' ? 'text-green-500 font-bold' : 'hover:text-green-500'}`}>
+                    About
+                </Link>
+                <Link to="/projects" className={`my-2 ${Path === '/projects' ? 'text-green-500 font-bold' : 'hover:text-green-500'}`}>
+                    Projects
+                </Link>
+            </div>
             <div className="flex gap-2">
                 <button className="p-3 rounded-full bg-gradient-to-r from-green-300 via-yellow-400 to-orange-500 text-black h-[50px] max-[600px]:p-1 max-[600px]:h-[25px] max-[600px]:mt-3">
                     <FaMoon />
                 </button>
-                <Link to="/sign-in">
-                    <button className="px-6 py-3 text-black font-bold bg-gradient-to-r from-green-300 via-yellow-400 to-orange-500 rounded-md shadow-lg hover:opacity-90 transition duration-300 max-[600px]:px-2 py-2 font-medium">
-                        Sign In
-                    </button>
-                </Link>
+                {
+                    currentUser ? (
+                        <Dropdown
+                            arrowIcon={false}
+                            inline
+                            label={
+                                <Avatar
+                                    alt="User Avatar"
+                                    img={currentUser.profilePicture}
+                                    rounded
+                                    className="w-10 h-10 border-2 border-yellow-400 shadow-md rounded-full" // Full rounded avatar
+                                />
+                            }
+                            className="relative z-10" // Ensure dropdown appears above other content
+                        >
+                            <Dropdown.Header className="bg-gray-800 text-white p-4 rounded-t-md">
+                                <span className="text-lg font-semibold">{currentUser.username}</span>
+                                <span className="block text-sm text-gray-400">{currentUser.email}</span>
+                            </Dropdown.Header>
+                            <Link to={'/dashboard?tab=profile'}>
+                                <Dropdown.Item className="hover:bg-gray-700 transition duration-200">
+
+                                    Profile
+                                </Dropdown.Item>
+                            </Link>
+
+                            <Dropdown.Item className="hover:bg-gray-700 transition duration-200">
+                                Account Management
+                            </Dropdown.Item>
+                            <Dropdown.Item className="hover:bg-gray-700 transition duration-200">
+                                Logout
+                            </Dropdown.Item>
+                            <Dropdown.Divider className="border-gray-600" />
+                            <Dropdown.Item className="text-red-500 hover:bg-red-600 transition duration-200">
+                                Delete Account
+                            </Dropdown.Item>
+                        </Dropdown>
+                    ) :
+                        (
+                            <Link to="/sign-in">
+                                <button className="px-6 py-3 text-black font-bold bg-gradient-to-r from-green-300 via-yellow-400 to-orange-500 rounded-md shadow-lg hover:opacity-90 transition duration-300 max-[600px]:px-2 py-2 font-medium">
+                                    Sign In
+                                </button>
+                            </Link>
+                        )
+                }
+
             </div>
 
             {/* Toggle Navbar for Mobile */}
@@ -70,18 +127,7 @@ export default function Header() {
                 </div>
             </div>
 
-            {/* Desktop Navigation Links */}
-            <div className="hidden lg:flex gap-4">
-                <Link to="/" className={`my-2 ${Path === '/' ? 'text-green-500 font-bold' : 'text-gray-800 hover:text-green-500'}`}>
-                    Home
-                </Link>
-                <Link to="/about" className={`my-2 ${Path === '/about' ? 'text-green-500 font-bold' : 'hover:text-green-500'}`}>
-                    About
-                </Link>
-                <Link to="/projects" className={`my-2 ${Path === '/projects' ? 'text-green-500 font-bold' : 'hover:text-green-500'}`}>
-                    Projects
-                </Link>
-            </div>
+
         </nav>
     );
 }
