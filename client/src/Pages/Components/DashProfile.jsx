@@ -4,14 +4,22 @@ import { getDownloadURL, getStorage, uploadBytes, uploadBytesResumable, ref } fr
 import { app } from "../../firebase";
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import { updateFailure, updateStart, updateSuccess } from "../../redux/user/userSlice";
+import { useDispatch } from "react-redux";
+import { Alert } from 'flowbite-react'
 export default function DashProfile() {
     const { currentUser } = useSelector((state) => state.user);
     const [imageFile, setImagefile] = useState(null);
     const [imageFileUrl, setImageFileUrl] = useState(null);
     const [imageFileUploadingProgress, setImageFileUploadingProgress] = useState(null);
     const [imageFileUploadingError, setImageFileUploadingError] = useState(null);
+    const [imageFileUploading, setImageFileUploading] = useState(false);
+    const [upadeUserSuccess, setUpdateUserSuccess] = useState(null);
+    const [updateUserError, setUpdateUserError] = useState(null);
 
+    const [formData, setFormData] = useState({});
     const filePickerRef = useRef();
+    const dispatch = useDispatch();
     const handleImageChange = (e) => {
         const file = e.target.files[0]
         if (file) {
@@ -35,6 +43,7 @@ export default function DashProfile() {
         //       }
         //     }
         //   }
+        setImageFileUploading(true)
         setImageFileUploadingError(null);
         const storage = getStorage(app);
         const fileName = new Date().getTime() + imageFile.name;
@@ -52,10 +61,16 @@ export default function DashProfile() {
                 setImageFileUploadingProgress(null);
                 setImagefile(null);
                 setImageFileUrl(null);
+                setImageFileUploading(false)
             },
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    setImageFileUrl(downloadURL)
+                    setImageFileUrl(downloadURL);
+                    setFormData({
+                        ...formData, profilePicture: downloadURL,
+                    })
+                    setImageFileUploading(false)
+
                 })
             }
         )
@@ -63,31 +78,65 @@ export default function DashProfile() {
 
     // Placeholder function for handling input changes
     const handleChange = (e) => {
-        console.log(e.target.value);
+        setFormData({ ...formData, [e.target.id]: e.target.value })
     };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setUpdateUserError(null);
+        setUpdateUserSuccess(null);
+        if (Object.keys(formData).length === 0) {
+          setUpdateUserError('No changes made');
+          return;
+        }
+        if (imageFileUploading) {
+          setUpdateUserError('Please wait for image to upload');
+          return;
+        }
+        try {
+          dispatch(updateStart());
+          const res = await fetch(`/api/user/update/${currentUser._id}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+          });
+          const data = await res.json();
+          if (!res.ok) {
+            dispatch(updateFailure(data.message));
+            setUpdateUserError(data.message);
+          } else {
+            dispatch(updateSuccess(data));
+            setUpdateUserSuccess("User's profile updated successfully");
+          }
+        } catch (error) {
+          dispatch(updateFailure(error.message));
+          setUpdateUserError(error.message);
+        }
+      };
 
     return (
         <div className="max-w-lg mx-auto text-center rounded-lg max-[650px]:ml-[10vw] max-[450px]:ml-[17vw] pt-[15vh]">
             <h1 className="my-6 text-center font-semibold text-2xl md:text-3xl text-gray-800">Profile</h1>
-            <form className="flex flex-col space-y-6">
+            <form className="flex flex-col space-y-6" onSubmit={handleSubmit}>
                 <input type="file" accept="image/*" onChange={handleImageChange} ref={filePickerRef} className="hidden" />
 
                 <div className="relative w-24 h-24 md:w-32 md:h-32 self-center cursor-pointer" onClick={() => filePickerRef.current.click()}>
                     {imageFileUploadingProgress && (
                         <CircularProgressbar value={imageFileUploadingProgress || 0} text={`${imageFileUploadingProgress}%`}
-                        strokeWidth={5}
-                        styles={{
-                            root: {
-                                width: '100%',
-                                height: '100%',
-                                position: 'absolute',
-                                top:0,
-                                left: 0,
-                            },
-                            path: {
-                                stroke: `rgba(62,152, 199, ${imageFileUploadingProgress / 100})`,
-                            },
-                        }} />
+                            strokeWidth={5}
+                            styles={{
+                                root: {
+                                    width: '100%',
+                                    height: '100%',
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: 0,
+                                },
+                                path: {
+                                    stroke: `rgba(62,152, 199, ${imageFileUploadingProgress / 100})`,
+                                },
+                            }} />
                     )}
                     <img
                         src={imageFileUrl || currentUser.profilePicture}
@@ -95,6 +144,16 @@ export default function DashProfile() {
                         className={`rounded-full w-full h-full border-4 md:border-8 object-cover border-gray-800 shadow-2xl ${imageFileUploadingProgress && imageFileUploadingProgress < 100 && 'opacity-60'}`}
                     />
                 </div>
+                {upadeUserSuccess && (
+                    <Alert color="success" className="mt-5">
+                        {upadeUserSuccess}
+                    </Alert>
+                )}
+                 {updateUserError && (
+        <Alert color='failure' className='mt-5'>
+          {updateUserError}
+        </Alert>
+      )}
                 {imageFileUploadingError && (
                     <div className="flex items-center bg-orange-500 text-white text-sm font-bold px-4 py-3 rounded shadow-md my-4" role="alert">
                         <svg className="fill-current w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
