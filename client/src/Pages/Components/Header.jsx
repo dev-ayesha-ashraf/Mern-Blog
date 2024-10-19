@@ -19,7 +19,7 @@ export default function Header() {
     };
 
     return (
-        <nav className={`border-b-2 flex justify-between items-center p-4 relative max-[600px]:p-1 transition-all duration-300 ease-in-out`}>
+        <nav className={`border-b-2 flex justify-between items-center p-4 fixed w-[100vw] max-[600px]:p-1 transition-all duration-300 ease-in-out ${theme === 'dark' ? 'bg-gradient-to-r from-teal-700' : 'bg-blue-100'} z-50`}>
             <Link to="/" className="flex items-center">
             <FaBloggerB className="text-5xl mr-1 text-black"/>
             <span className={`text-3xl font-bold ${theme === 'dark' ? 'bg-white' : 'bg-gradient-to-r from-blue-600 to-blue-900'} text-transparent bg-clip-text max-[600px]:text-xl max-[600px]:font-normal max-[360px]:hidden`}>

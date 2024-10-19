@@ -9,7 +9,7 @@ export default function DashProfile() {
     };
 
     return (
-        <div className="max-w-lg mx-auto p-4 md:p-6 lg:p-8 text-center rounded-lg max-[650px]:ml-[10vw] max-[450px]:ml-[17vw]">
+        <div className="max-w-lg mx-auto text-center rounded-lg max-[650px]:ml-[10vw] max-[450px]:ml-[17vw] pt-[15vh]">
             <h1 className="my-6 text-center font-semibold text-2xl md:text-3xl text-gray-800">Profile</h1>
             <form className="flex flex-col space-y-6">
                 <div className="w-24 h-24 md:w-32 md:h-32 self-center cursor-pointer">
@@ -25,7 +25,7 @@ export default function DashProfile() {
                     placeholder="Username"
                     defaultValue={currentUser.username}
                     onChange={handleChange}
-                    className="text-center"
+                    className="text-center text-gray-700"
                 />
                 <TextInput
                     type="email"
@@ -33,14 +33,14 @@ export default function DashProfile() {
                     placeholder="Email"
                     defaultValue={currentUser.email}
                     onChange={handleChange}
-                    className="text-center"
+                    className="text-center text-gray-700"
                 />
                 <TextInput
                     type="password"
                     id="password"
                     placeholder="Password"
                     onChange={handleChange}
-                    className="text-center"
+                    className="text-center text-gray-700"
                 />
                 <button className="bg-yellow-500 py-2 rounded-lg hover:bg-yellow-600 transition duration-300">
                     Update

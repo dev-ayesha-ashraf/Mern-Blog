@@ -54,7 +54,7 @@ export default function SignUp() {
 
 
   return (
-    <div className="relative grid items-center justify-center min-h-screen p-4"
+    <div className="relative grid items-center justify-center min-h-screen pt-[15vh] z-0"
   >
 
       <motion.div

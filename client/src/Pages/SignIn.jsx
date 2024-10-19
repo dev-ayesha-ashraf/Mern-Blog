@@ -48,7 +48,7 @@ export default function SignIn() {
 
 
   return (
-    <div className="relative grid items-center justify-center min-h-screen  p-4">
+    <div className="relative grid items-center justify-center min-h-screen  pt-[15vh]">
       <motion.div
         className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full"
         initial={{ scale: 0.8 }}

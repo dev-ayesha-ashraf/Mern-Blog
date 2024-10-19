@@ -14,9 +14,9 @@ export default function DashSideBar() {
 
             {/* Sidebar */}
             <div
-                className={`fixed left-0 top-20 mt-1 h-full bg-gray-800 text-white shadow-md transform transition-transform duration-300 ease-in-out max-[750px]:top-15 max-[600px]:top-12 max-[600px]:mt-2 ${isOpen ? 'translate-x-0' : '-translate-x-[8rem]'} md:translate-x-0`}
+                className={`fixed left-0 top-20 mt-1 h-full bg-gray-800 text-white shadow-md transform transition-transform duration-300 ease-in-out max-[750px]:top-15 max-[600px]:top-12 max-[600px]:mt-2 ${isOpen ? 'translate-x-0' : '-translate-x-[8.5rem]'} md:translate-x-0`}
             >
-                <div className="flex flex-col h-full p-4 max-[850px]:p-1">
+                <div className="flex flex-col h-full p-4 max-[850px]:p-0">
                     <div className='flex justify-between'>
                         <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
                         <button
