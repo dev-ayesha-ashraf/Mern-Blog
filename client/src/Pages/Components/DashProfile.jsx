@@ -4,11 +4,11 @@ import { getDownloadURL, getStorage, uploadBytes, uploadBytesResumable, ref } fr
 import { app } from "../../firebase";
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import { updateFailure, updateStart, updateSuccess } from "../../redux/user/userSlice";
+import { updateFailure, updateStart, updateSuccess,deleteUserStart, deleteUserFailure , deleteUserSuccess , signoutSuccess} from "../../redux/user/userSlice";
 import { useDispatch } from "react-redux";
-import { Alert } from 'flowbite-react'
+import { Alert, Modal, ModalBody , Button} from 'flowbite-react'
 export default function DashProfile() {
-    const { currentUser } = useSelector((state) => state.user);
+    const { currentUser , error } = useSelector((state) => state.user);
     const [imageFile, setImagefile] = useState(null);
     const [imageFileUrl, setImageFileUrl] = useState(null);
     const [imageFileUploadingProgress, setImageFileUploadingProgress] = useState(null);
@@ -16,7 +16,7 @@ export default function DashProfile() {
     const [imageFileUploading, setImageFileUploading] = useState(false);
     const [upadeUserSuccess, setUpdateUserSuccess] = useState(null);
     const [updateUserError, setUpdateUserError] = useState(null);
-
+    const [showModal, setShowModal] = useState(false);
     const [formData, setFormData] = useState({});
     const filePickerRef = useRef();
     const dispatch = useDispatch();
@@ -85,36 +85,70 @@ export default function DashProfile() {
         setUpdateUserError(null);
         setUpdateUserSuccess(null);
         if (Object.keys(formData).length === 0) {
-          setUpdateUserError('No changes made');
-          return;
+            setUpdateUserError('No changes made');
+            return;
         }
         if (imageFileUploading) {
-          setUpdateUserError('Please wait for image to upload');
-          return;
+            setUpdateUserError('Please wait for image to upload');
+            return;
         }
         try {
-          dispatch(updateStart());
-          const res = await fetch(`/api/user/update/${currentUser._id}`, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
+            dispatch(updateStart());
+            const res = await fetch(`/api/user/update/${currentUser._id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+            const data = await res.json();
+            if (!res.ok) {
+                dispatch(updateFailure(data.message));
+                setUpdateUserError(data.message);
+            } else {
+                dispatch(updateSuccess(data));
+                setUpdateUserSuccess("User's profile updated successfully");
+            }
+        } catch (error) {
+            dispatch(updateFailure(error.message));
+            setUpdateUserError(error.message);
+        }
+    };
+    const handleDeleteUser = async () => {
+        setShowModal(false);
+        try {
+            dispatch(deleteUserStart());
+            const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+                method: 'DELETE',
+            });
+            if (!res.ok) {
+                const data = await res.json();
+                dispatch(deleteUserFailure(data.message));
+            } else {
+                const data = await res.json();
+                dispatch(deleteUserSuccess(data));
+            }
+        } catch (error) {
+            console.error("Error deleting user:", error);
+            dispatch(deleteUserFailure(error.message));
+        }
+    };
+    
+    const handleSignout = async () => {
+        try {
+          const res = await fetch('/api/user/signout', {
+            method: 'POST',
           });
           const data = await res.json();
           if (!res.ok) {
-            dispatch(updateFailure(data.message));
-            setUpdateUserError(data.message);
+            console.log(data.message);
           } else {
-            dispatch(updateSuccess(data));
-            setUpdateUserSuccess("User's profile updated successfully");
+            dispatch(signoutSuccess());
           }
         } catch (error) {
-          dispatch(updateFailure(error.message));
-          setUpdateUserError(error.message);
+          console.log(error.message);
         }
       };
-
     return (
         <div className="max-w-lg mx-auto text-center rounded-lg max-[650px]:ml-[10vw] max-[450px]:ml-[17vw] pt-[15vh]">
             <h1 className="my-6 text-center font-semibold text-2xl md:text-3xl text-gray-800">Profile</h1>
@@ -149,11 +183,11 @@ export default function DashProfile() {
                         {upadeUserSuccess}
                     </Alert>
                 )}
-                 {updateUserError && (
-        <Alert color='failure' className='mt-5'>
-          {updateUserError}
-        </Alert>
-      )}
+                {updateUserError && (
+                    <Alert color='failure' className='mt-5'>
+                        {updateUserError}
+                    </Alert>
+                )}
                 {imageFileUploadingError && (
                     <div className="flex items-center bg-orange-500 text-white text-sm font-bold px-4 py-3 rounded shadow-md my-4" role="alert">
                         <svg className="fill-current w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -189,14 +223,39 @@ export default function DashProfile() {
                     Update
                 </button>
                 <div className="flex justify-between items-center mt-4 text-sm md:text-base text-gray-600">
-                    <span className="cursor-pointer hover:text-red-500 transition duration-300">
+                    <span className="cursor-pointer hover:text-red-500 transition duration-300" onClick={() => setShowModal(true)}>
                         Delete Account
                     </span>
-                    <span className="cursor-pointer hover:text-blue-500 transition duration-300">
+                    <span className="cursor-pointer hover:text-blue-500 transition duration-300" onClick={handleSignout}>
                         Sign Out
                     </span>
                 </div>
             </form>
+
+
+            <Modal
+                show={showModal}
+                onClose={() => setShowModal(false)}
+                popup
+                size='md'
+            >
+                <Modal.Header />
+                <Modal.Body>
+                    <div className='text-center'>
+                        <h3 className='mb-5 text-lg text-gray-500 dark:text-gray-400'>
+                            Are you sure you want to delete your account?
+                        </h3>
+                        <div className='flex justify-center gap-4'>
+                            <Button color='failure' onClick={handleDeleteUser}>
+                                Yes, I'm sure
+                            </Button>
+                            <Button color='gray' onClick={() => setShowModal(false)}>
+                                No, cancel
+                            </Button>
+                        </div>
+                    </div>
+                </Modal.Body>
+            </Modal>
         </div>
     );
 }
