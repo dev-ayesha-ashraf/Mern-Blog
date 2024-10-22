@@ -6,9 +6,11 @@ import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { updateFailure, updateStart, updateSuccess,deleteUserStart, deleteUserFailure , deleteUserSuccess , signoutSuccess} from "../../redux/user/userSlice";
 import { useDispatch } from "react-redux";
-import { Alert, Modal, ModalBody , Button} from 'flowbite-react'
+import { Alert, Modal, ModalBody , Button } from 'flowbite-react'
+import { Link} from "react-router-dom";
+
 export default function DashProfile() {
-    const { currentUser , error } = useSelector((state) => state.user);
+    const { currentUser , error , loading } = useSelector((state) => state.user);
     const [imageFile, setImagefile] = useState(null);
     const [imageFileUrl, setImageFileUrl] = useState(null);
     const [imageFileUploadingProgress, setImageFileUploadingProgress] = useState(null);
@@ -219,9 +221,17 @@ export default function DashProfile() {
                     onChange={handleChange}
                     className="text-center text-gray-700"
                 />
-                <button className="bg-yellow-500 py-2 rounded-lg hover:bg-yellow-600 transition duration-300">
-                    Update
+                <button className="bg-yellow-500 py-2 rounded-lg hover:bg-yellow-600 transition duration-300" disabled={loading || imageFileUploading}>
+                    {
+                        loading ? 'Updating...' : 'Update'
+                    }
                 </button>
+                <Link to='/create-post'>
+                <button className="bg-yellow-500 py-2 rounded-lg hover:bg-yellow-600 transition duration-300">
+                    Create A Post
+                </button>
+                </Link>
+             
                 <div className="flex justify-between items-center mt-4 text-sm md:text-base text-gray-600">
                     <span className="cursor-pointer hover:text-red-500 transition duration-300" onClick={() => setShowModal(true)}>
                         Delete Account
