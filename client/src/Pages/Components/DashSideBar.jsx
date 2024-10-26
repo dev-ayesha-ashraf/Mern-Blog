@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { FaUser, FaSignOutAlt, FaBars, FaTimes } from 'react-icons/fa';
+import { MdDashboard, MdOutlinePostAdd } from "react-icons/md";
 import { Link } from 'react-router-dom';
 
 export default function DashSideBar() {
@@ -35,11 +36,28 @@ export default function DashSideBar() {
                         <FaUser className="mr-2 text-xl max-[850px]:mr-2" />
 
                     </button>
-                    <button className="flex items-center justify-between p-2 my-2 transition-colors duration-200 hover:bg-gray-500 rounded ">
-                        Sign Out
+                    <button className="flex items-center justify-between p-2 my-2 transition-colors duration-200 hover:bg-gray-500 rounded">
+                        <Link to={'/dashboard?tab=posts'}>
+                         Blogs
+                        </Link>
+                        <MdOutlinePostAdd className="mr-2 text-xl max-[850px]:mr-2" />
+
+                    </button>
+                    <button className="flex items-center justify-between p-2 my-2 transition-colors duration-200 hover:bg-gray-500 rounded">
+                        <Link to={'/dashboard?tab=posts'}>
+                            Dashboard
+                        </Link>
+                        <MdDashboard className="mr-2 text-xl max-[850px]:mr-2" />
+
+                    </button>
+                    <button className="flex items-center justify-between p-2 my-2 transition-colors duration-200 hover:bg-gray-500 rounded">
+                        <Link to={'/dashboard?tab=profile'}>
+                            SignOut
+                        </Link>
                         <FaSignOutAlt className="mr-2 text-xl max-[850px]:mr-2" />
 
                     </button>
+
                 </div>
             </div>
 
