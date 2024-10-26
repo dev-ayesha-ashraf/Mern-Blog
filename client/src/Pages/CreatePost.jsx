@@ -43,10 +43,10 @@ export default function CreatePost() {
           </div>
           {/* {imageUploadError && <Alert color='failure'>{imageUploadError}</Alert>} */}
          
-            <img
+            {/* <img
               alt='upload'
               className='w-full h-72 object-cover'
-            />
+            /> */}
           
           <ReactQuill
             theme='snow'
