@@ -8,15 +8,21 @@ export default function DashPosts() {
   const [error, setError] = useState(null);
   const [selectedPost, setSelectedPost] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [showMore, setShowMore] = useState(true);
+  const [postLimit, setPostLimit] = useState(9); // Set initial limit to 9 posts
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`/api/post/getposts${currentUser.isAdmin ? '' : `?userId=${currentUser._id}`}`);
+        const res = await fetch(`/api/post/getposts${currentUser.isAdmin ? `?limit=${postLimit}` : `?userId=${currentUser._id}&limit=${postLimit}`}`);
         const data = await res.json();
         if (res.ok) {
           setUserPosts(data.posts);
+          // Hide "Show More" button if fewer posts are fetched than requested limit
+          if (data.posts.length < postLimit) {
+            setShowMore(false);
+          }
         } else {
           throw new Error(data.message || "Failed to fetch posts");
         }
@@ -28,7 +34,11 @@ export default function DashPosts() {
     };
 
     fetchPosts();
-  }, [currentUser]);
+  }, [currentUser, postLimit]);
+
+  const handleShowMore = () => {
+    setPostLimit((prevLimit) => prevLimit + 5); // Increase limit by 5 on each click
+  };
 
   const openModal = (post) => {
     setSelectedPost(post);
@@ -93,6 +103,14 @@ export default function DashPosts() {
               </div>
             ))}
           </div>
+          {showMore && (
+            <button
+              onClick={handleShowMore}
+              className='w-full text-teal-500 self-center text-sm py-7'
+            >
+              Show more
+            </button>
+          )}
         </div>
       ) : (
         <p>No posts found.</p>
@@ -100,7 +118,7 @@ export default function DashPosts() {
 
       {/* Modal for showing post details */}
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 pt-20">
+        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 h-full pt-20">
           <div className="bg-white p-6 rounded shadow-lg max-w-md w-full">
             <h2 className="text-2xl font-bold">{selectedPost.title}</h2>
             {selectedPost.image && (
