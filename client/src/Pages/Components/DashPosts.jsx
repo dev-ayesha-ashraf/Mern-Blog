@@ -46,42 +46,61 @@ export default function DashPosts() {
   return (
     <div className="pt-20 w-[75%] mx-auto pl-[10%]">
       {userPosts.length > 0 ? (
-        <table className="mt-4 w-full border-collapse">
-          <thead>
-            <tr className="bg-gray-200">
-            <th className="border px-4 py-2 text-left">Index</th>
-              <th className="border px-4 py-2 text-left">UserName</th>
-              <th className="border px-4 py-2 text-left">Title</th>
-              <th className="border px-4 py-2 text-left">Posted On</th>
-              <th className="border px-4 py-2 text-left">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {userPosts.map(post => (
-              <tr key={post._id} className="border-b hover:bg-gray-100">
-                <td className="border px-4 py-2">1</td>
-                <td className="border px-4 py-2">{currentUser.username}</td>
-                <td className="border px-4 py-2">{currentUser.username}</td>
-                <td className="border px-4 py-2">{new Date(post.createdAt).toLocaleDateString()}</td>
-                <td className="border px-4 py-2">
+        <div className="mt-4">
+          <table className="hidden w-full border-collapse md:table">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="border px-4 py-2 text-left">Index</th>
+                <th className="border px-4 py-2 text-left">Title</th>
+                <th className="border px-4 py-2 text-left">Posted On</th>
+                <th className="border px-4 py-2 text-left">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {userPosts.map((post, index) => (
+                <tr key={post._id} className="border-b hover:bg-gray-100">
+                  <td className="border px-4 py-2">{index + 1}</td>
+                  <td className="border px-4 py-2">{post.title}</td>
+                  <td className="border px-4 py-2">{new Date(post.createdAt).toLocaleDateString()}</td>
+                  <td className="border px-4 py-2">
+                    <button
+                      className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                      onClick={() => openModal(post)}
+                    >
+                      Show Details
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {/* Mobile view */}
+          <div className="md:hidden">
+            {userPosts.map((post, index) => (
+              <div key={post._id} className="mb-4 p-4 border rounded-lg shadow-sm hover:bg-gray-100">
+                <p><strong>Index:</strong> {index + 1}</p>
+                <p><strong>Title:</strong> {post.title}</p>
+                <p><strong>Posted On:</strong> {new Date(post.createdAt).toLocaleDateString()}</p>
+                <div className="mt-2">
                   <button
-                    className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 mr-2"
                     onClick={() => openModal(post)}
                   >
                     Show Details
                   </button>
-                </td>
-              </tr>
+                </div>
+              </div>
             ))}
-          </tbody>
-        </table>
+          </div>
+        </div>
       ) : (
         <p>No posts found.</p>
       )}
 
       {/* Modal for showing post details */}
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 pt-20">
           <div className="bg-white p-6 rounded shadow-lg max-w-md w-full">
             <h2 className="text-2xl font-bold">{selectedPost.title}</h2>
             {selectedPost.image && (
@@ -94,7 +113,6 @@ export default function DashPosts() {
             <p className="mt-2">{selectedPost.content}</p>
             <p><strong>Posted on:</strong> {new Date(selectedPost.createdAt).toLocaleDateString()}</p>
             <p><strong>User ID:</strong> {selectedPost.userId}</p>
-            <p><strong>Email:</strong> {currentUser.email}</p>
             <p><strong>Last Updated:</strong> {new Date(selectedPost.updatedAt).toLocaleDateString()}</p>
             <div className="mt-4 space-x-2">
               <button
