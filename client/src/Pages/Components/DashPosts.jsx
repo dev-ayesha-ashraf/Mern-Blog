@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from 'react-redux';
+import { Modal, Table, Button } from 'flowbite-react';
 
 export default function DashPosts() {
   const { currentUser } = useSelector((state) => state.user);
@@ -10,6 +11,8 @@ export default function DashPosts() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [showMore, setShowMore] = useState(true);
   const [postLimit, setPostLimit] = useState(9); // Set initial limit to 9 posts
+  const [showdeleteModal, setShowdeleteModal] = useState(false);
+  const [postIdToDelete, setPostIdToDelete] = useState('');
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -48,6 +51,28 @@ export default function DashPosts() {
   const closeModal = () => {
     setSelectedPost(null);
     setModalOpen(false);
+  };
+
+  const handleDeletePost = async () => {
+    setShowdeleteModal(false);
+    try {
+      const res = await fetch(
+        `/api/post/deletepost/${postIdToDelete}/${currentUser._id}`,
+        {
+          method: 'DELETE',
+        }
+      );
+      const data = await res.json();
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        setUserPosts((prev) =>
+          prev.filter((post) => post._id !== postIdToDelete)
+        );
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   if (loading) return <h2>Loading posts...</h2>;
@@ -141,7 +166,10 @@ export default function DashPosts() {
               </button>
               <button
                 className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-                onClick={() => {/* Add delete functionality */ }}
+                onClick={() => {
+                  setShowdeleteModal(true);
+                  setPostIdToDelete(selectedPost._id); // Use selectedPost's ID
+                }}
               >
                 Delete
               </button>
@@ -155,6 +183,31 @@ export default function DashPosts() {
           </div>
         </div>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        show={showdeleteModal}
+        onClose={() => setShowdeleteModal(false)}
+        popup
+        size='md'
+      >
+        <Modal.Header />
+        <Modal.Body>
+          <div className='text-center'>
+            <h3 className='mb-5 text-lg text-gray-500 dark:text-gray-400'>
+              Are you sure you want to delete this post?
+            </h3>
+            <div className='flex justify-center gap-4'>
+              <Button color='failure' onClick={handleDeletePost}>
+                Yes, I'm sure
+              </Button>
+              <Button color='gray' onClick={() => setShowdeleteModal(false)}>
+                No, cancel
+              </Button>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }
