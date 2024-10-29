@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect  } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { FaBloggerB } from "react-icons/fa";
 import { AiOutlineSearch, AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
@@ -6,14 +6,31 @@ import { FaMoon } from "react-icons/fa";
 import { useSelector, useDispatch } from 'react-redux';
 import { Avatar, Dropdown } from 'flowbite-react';
 import { toggleTheme } from '../../redux/theme/themeSlice';
+import { TextInput } from "flowbite-react";
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
     const Path = useLocation().pathname;
     const { currentUser } = useSelector(state => state.user);
     const { theme } = useSelector(state => state.theme);
+    const [searchTerm, setSearchTerm] = useState('');
     const dispatch = useDispatch();
-
+    const navigate = useNavigate();
+    useEffect(() => {
+        const urlParams = new URLSearchParams(location.search);
+        const searchTermFromUrl = urlParams.get('searchTerm');
+        if (searchTermFromUrl) {
+            setSearchTerm(searchTermFromUrl);
+        }
+    }, [location.search]);
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const urlParams = new URLSearchParams(location.search);
+        urlParams.set('searchTerm', searchTerm);
+        const searchQuery = urlParams.toString();
+        navigate(`/search?${searchQuery}`);
+    };
     const toggleNavbar = () => {
         setIsOpen(!isOpen);
     };
@@ -21,21 +38,24 @@ export default function Header() {
     return (
         <nav className={`border-b-2 flex justify-between items-center p-4 fixed w-[100vw] max-[600px]:p-1 transition-all duration-300 ease-in-out ${theme === 'dark' ? 'bg-gradient-to-r from-teal-700' : 'bg-blue-100'} z-50`}>
             <Link to="/" className="flex items-center">
-            <FaBloggerB className="text-5xl mr-1 text-black"/>
-            <span className={`text-3xl font-bold ${theme === 'dark' ? 'bg-white' : 'bg-gradient-to-r from-blue-600 to-blue-900'} text-transparent bg-clip-text max-[600px]:text-xl max-[600px]:font-normal max-[360px]:hidden`}>
+                <FaBloggerB className="text-5xl mr-1 text-black" />
+                <span className={`text-3xl font-bold ${theme === 'dark' ? 'bg-white' : 'bg-gradient-to-r from-blue-600 to-blue-900'} text-transparent bg-clip-text max-[600px]:text-xl max-[600px]:font-normal max-[360px]:hidden`}>
                     Techie Blog
                 </span>
             </Link>
 
             <div className="relative hidden lg:flex">
-                <input
-                    type="text"
-                    placeholder="Search"
-                    className={`border rounded-lg p-2 pl-10 ${theme === 'dark' ? 'bg-[rgb(22,29,50)] text-gray-200 border-gray-700' : 'bg-gray-100 border-gray-300 text-gray-700'}`}
-                />
-                <button type="submit" className={`absolute left-2 top-3 text-xl ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
-                    <AiOutlineSearch />
-                </button>
+                <form onSubmit={handleSubmit}>
+                    <TextInput
+                        type='text'
+                        placeholder='Search...'
+                        rightIcon={AiOutlineSearch}
+                        className='hidden lg:inline'
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                </form>
+
             </div>
 
             <button className={`w-12 h-10 lg:hidden text-xl ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`} onClick={toggleNavbar}>
@@ -53,7 +73,7 @@ export default function Header() {
                     Projects
                 </Link>
             </div>
-            
+
             <div className="flex gap-2">
                 <button className={`p-3 rounded-full bg-gradient-to-r ${theme === 'dark' ? 'from-teal-500 to-teal-700' : 'bg-gradient-to-r from-blue-400 to-blue-600 '} text-black h-[50px] max-[600px]:p-1 max-[600px]:h-[25px] max-[600px]:mt-3`} onClick={() => dispatch(toggleTheme())}>
                     <FaMoon />
