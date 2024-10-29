@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from 'react-redux';
 import { Modal, Table, Button } from 'flowbite-react';
+import { Link } from "react-router-dom";
 
 export default function DashPosts() {
   const { currentUser } = useSelector((state) => state.user);
@@ -158,12 +159,15 @@ export default function DashPosts() {
             <p><strong>User ID:</strong> {selectedPost.userId}</p>
             <p><strong>Last Updated:</strong> {new Date(selectedPost.updatedAt).toLocaleDateString()}</p>
             <div className="mt-4 space-x-2">
-              <button
-                className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-                onClick={() => {/* Add update functionality */ }}
-              >
+              {/* <button className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
                 Update
-              </button>
+              </button> */}
+              <Link
+                className='text-teal-500 hover:underline'
+                to={`/update-post/${selectedPost._id}`}
+              >
+                <span>Update</span>
+              </Link>
               <button
                 className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
                 onClick={() => {

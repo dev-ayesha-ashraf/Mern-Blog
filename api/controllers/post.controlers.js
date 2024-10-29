@@ -92,3 +92,35 @@ export const deletepost = async (req, res, next) => {
     next(errorHandler(500, 'An error occurred while deleting the post'));
   }
 };
+
+export const updatePost = async (req, res, next) => {
+  try {
+    // Check if the user is an admin or if the user is updating their own post
+    const post = await Post.findById(req.params.postId);
+    if (!post) {
+      return next(errorHandler(404, 'Post not found'));
+    }
+
+    if (!req.user.isAdmin && req.user.id !== post.userId.toString()) {
+      return next(errorHandler(403, 'You are not allowed to update this post'));
+    }
+
+    // Proceed with the update
+    const updatedPost = await Post.findByIdAndUpdate(
+      req.params.postId,
+      {
+        $set: {
+          title: req.body.title,
+          content: req.body.content,
+          category: req.body.category,
+          image: req.body.image,
+        },
+      },
+      { new: true }
+    );
+
+    res.status(200).json(updatedPost);
+  } catch (error) {
+    next(error);
+  }
+};
