@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { FaUser, FaSignOutAlt, FaBars, FaTimes } from 'react-icons/fa';
 import { MdDashboard, MdOutlinePostAdd } from "react-icons/md";
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { PiUsersFill } from "react-icons/pi";
 
 export default function DashSideBar() {
     const [isOpen, setIsOpen] = useState(false);
@@ -9,7 +11,7 @@ export default function DashSideBar() {
     const toggleSidebar = () => {
         setIsOpen(!isOpen);
     };
-
+    const { currentUser } = useSelector((state) => state.user);
     return (
         <div>
 
@@ -38,7 +40,7 @@ export default function DashSideBar() {
                     </button>
                     <button className="flex items-center justify-between p-2 my-2 transition-colors duration-200 hover:bg-gray-500 rounded">
                         <Link to={'/dashboard?tab=posts'}>
-                         Blogs
+                            Blogs
                         </Link>
                         <MdOutlinePostAdd className="mr-2 text-xl max-[850px]:mr-2" />
 
@@ -50,6 +52,35 @@ export default function DashSideBar() {
                         <MdDashboard className="mr-2 text-xl max-[850px]:mr-2" />
 
                     </button>
+                    {currentUser.isAdmin && (
+                        <>
+                            <button className="flex items-center justify-between p-2 my-2 transition-colors duration-200 hover:bg-gray-500 rounded">
+                                <Link to={'/dashboard?tab=users'}>
+                                    Users
+                                </Link>
+                                <PiUsersFill className="mr-2 text-xl max-[850px]:mr-2" />
+
+                            </button>
+                            {/* <Link to='/dashboard?tab=users'>
+                                <Sidebar.Item
+                                    active={tab === 'users'}
+                                    // icon={HiOutlineUserGroup}
+                                    as='div'
+                                >
+                                    Users
+                                </Sidebar.Item>
+                            </Link> */}
+                            {/* <Link to='/dashboard?tab=comments'>
+                                <Sidebar.Item
+                                    active={tab === 'comments'}
+                                    // icon={HiAnnotation}
+                                    as='div'
+                                >
+                                    Comments
+                                </Sidebar.Item>
+                            </Link> */}
+                        </>
+                    )}
                     <button className="flex items-center justify-between p-2 my-2 transition-colors duration-200 hover:bg-gray-500 rounded">
                         <Link to={'/dashboard?tab=profile'}>
                             SignOut

@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import DashSideBar from "./Components/DashSideBar";
 import DashProfile from "./Components/DashProfile";
 import DashPosts from "./Components/DashPosts";
+import DashUsers from "./Components/DashUsers";
+
 
 export default function Dashboard() {
   const location = useLocation();
@@ -10,7 +12,7 @@ export default function Dashboard() {
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const tabFromUrl = urlParams.get('tab');
-    if(tabFromUrl){
+    if (tabFromUrl) {
       setTab(tabFromUrl)
     }
 
@@ -25,11 +27,14 @@ export default function Dashboard() {
       <div>
         {tab === 'profile' && <DashProfile />}
       </div>
-            {/* posts... */}
-            <div>
-            {tab === 'posts' && <DashPosts />}
-
-            </div>
+      {/* posts... */}
+      <div>
+        {tab === 'posts' && <DashPosts />}
+      </div>
+      {/* Users */}
+      <div>
+        {tab === 'users' && <DashUsers />}
+      </div>
     </div>
   )
 }
