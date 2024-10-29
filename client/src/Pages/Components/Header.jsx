@@ -1,150 +1,190 @@
-import { useState, useEffect  } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { FaBloggerB } from "react-icons/fa";
 import { AiOutlineSearch, AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
-import { FaMoon } from "react-icons/fa";
 import { useSelector, useDispatch } from 'react-redux';
 import { Avatar, Dropdown } from 'flowbite-react';
-import { toggleTheme } from '../../redux/theme/themeSlice';
 import { TextInput } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
+import { Modal , Button } from "flowbite-react";
+import { FaRegUser } from "react-icons/fa";
+
+import { signoutSuccess , deleteUserFailure , deleteUserStart , deleteUserSuccess } from "../../redux/user/userSlice";
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
-    const Path = useLocation().pathname;
+    const [showModal, setShowModal] = useState(false);
+    const path = useLocation().pathname;
     const { currentUser } = useSelector(state => state.user);
-    const { theme } = useSelector(state => state.theme);
     const [searchTerm, setSearchTerm] = useState('');
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
     useEffect(() => {
-        const urlParams = new URLSearchParams(location.search);
+        const urlParams = new URLSearchParams(window.location.search);
         const searchTermFromUrl = urlParams.get('searchTerm');
         if (searchTermFromUrl) {
             setSearchTerm(searchTermFromUrl);
         }
-    }, [location.search]);
+    }, [window.location.search]);
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        const urlParams = new URLSearchParams(location.search);
+        const urlParams = new URLSearchParams(window.location.search);
         urlParams.set('searchTerm', searchTerm);
         const searchQuery = urlParams.toString();
         navigate(`/search?${searchQuery}`);
     };
+
     const toggleNavbar = () => {
         setIsOpen(!isOpen);
     };
-
+    const handleSignout = async () => {
+        try {
+            const res = await fetch('/api/user/signout', {
+                method: 'POST',
+            });
+            const data = await res.json();
+            if (!res.ok) {
+                console.log(data.message);
+            } else {
+                dispatch(signoutSuccess());
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
+    const handleDeleteUser = async () => {
+        setShowModal(false);
+        try {
+            dispatch(deleteUserStart());
+            const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+                method: 'DELETE',
+            });
+            if (!res.ok) {
+                const data = await res.json();
+                dispatch(deleteUserFailure(data.message));
+            } else {
+                const data = await res.json();
+                dispatch(deleteUserSuccess(data));
+            }
+        } catch (error) {
+            console.error("Error deleting user:", error);
+            dispatch(deleteUserFailure(error.message));
+        }
+    };
     return (
-        <nav className={`border-b-2 flex justify-between items-center p-4 fixed w-[100vw] max-[600px]:p-1 transition-all duration-300 ease-in-out ${theme === 'dark' ? 'bg-gradient-to-r from-teal-700' : 'bg-blue-100'} z-50`}>
+        <nav className={`z-10 flex justify-between items-center p-4 fixed w-full transition-all duration-300 ease-in-out bg-[#db7093]`}>
             <Link to="/" className="flex items-center">
-                <FaBloggerB className="text-5xl mr-1 text-black" />
-                <span className={`text-3xl font-bold ${theme === 'dark' ? 'bg-white' : 'bg-gradient-to-r from-blue-600 to-blue-900'} text-transparent bg-clip-text max-[600px]:text-xl max-[600px]:font-normal max-[360px]:hidden`}>
-                    Techie Blog
-                </span>
+                <FaBloggerB className="text-5xl mr-2 text-white transition-transform hover:scale-110 max-[600px]:text-2xl" />
+                <span className={`text-3xl font-bold text-white max-[530px]:hidden max-[600px]:text-2xl`}>Techie Blog</span>
             </Link>
 
-            <div className="relative hidden lg:flex">
-                <form onSubmit={handleSubmit}>
+            <div className="relative lg:flex max-[440px]:w-[37%]">
+                <form onSubmit={handleSubmit} className="w-full">
                     <TextInput
                         type='text'
                         placeholder='Search...'
                         rightIcon={AiOutlineSearch}
-                        className='hidden lg:inline'
+                        className='rounded-lg shadow-md border-none focus:ring-2 focus:ring-[#85053a] focus:ring-opacity-100'
+                        style={{ outline: 'none', boxShadow: '0 0 0 2px #85053a' }} // Custom box shadow for focus
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </form>
 
+
+
+
             </div>
 
-            <button className={`w-12 h-10 lg:hidden text-xl ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`} onClick={toggleNavbar}>
-                <AiOutlineSearch />
-            </button>
-
-            <div className="hidden lg:flex gap-4">
-                <Link to="/" className={`my-2 ${Path === '/' ? 'text-blue-500 font-bold' : theme === 'dark' ? 'text-gray-400 hover:text-blue-400' : 'text-gray-600 hover:text-teal-500'}`}>
-                    Home
-                </Link>
-                <Link to="/about" className={`my-2 ${Path === '/about' ? 'text-blue-500 font-bold' : theme === 'dark' ? 'text-gray-400 hover:text-blue-400' : 'text-gray-600 hover:text-teal-500'}`}>
-                    About
-                </Link>
-                <Link to="/projects" className={`my-2 ${Path === '/projects' ? 'text-blue-500 font-bold' : theme === 'dark' ? 'text-gray-400 hover:text-blue-400' : 'text-gray-600 hover:text-teal-500'}`}>
-                    Projects
-                </Link>
+            <div className="hidden lg:flex gap-6">
+                {['/', '/about', '/projects'].map((link, index) => (
+                    <Link key={index} to={link} className={`my-2 text-lg ${path === link ? 'text-[#85053a] font-bold' : 'text-gray-200 hover:text-[#85053a] transition duration-300'}`}>
+                        {link === '/' ? 'Home' : link.charAt(1).toUpperCase() + link.slice(2)}
+                    </Link>
+                ))}
             </div>
 
-            <div className="flex gap-2">
-                <button className={`p-3 rounded-full bg-gradient-to-r ${theme === 'dark' ? 'from-teal-500 to-teal-700' : 'bg-gradient-to-r from-blue-400 to-blue-600 '} text-black h-[50px] max-[600px]:p-1 max-[600px]:h-[25px] max-[600px]:mt-3`} onClick={() => dispatch(toggleTheme())}>
-                    <FaMoon />
-                </button>
-                {
-                    currentUser ? (
-                        <Dropdown
-                            arrowIcon={false}
-                            inline
-                            label={
-                                <Avatar
-                                    alt="User Avatar"
-                                    img={currentUser.profilePicture}
-                                    rounded
-                                    className="w-10 h-10 border-2 border-yellow-400 shadow-md rounded-full hover:scale-110 transition-transform duration-200"
-                                />
-                            }
-                            className="relative z-10"
-                        >
-                            <Dropdown.Header className="bg-gray-800 text-white p-4 rounded-t-md">
-                                <span className="text-lg font-semibold">{currentUser.username}</span>
-                                <span className="block text-sm text-gray-400">{currentUser.email}</span>
-                            </Dropdown.Header>
-                            <Link to={'/dashboard?tab=profile'}>
-                                <Dropdown.Item className="hover:bg-gray-700 transition duration-200">
-                                    Profile
-                                </Dropdown.Item>
-                            </Link>
-                            <Dropdown.Item className="hover:bg-gray-700 transition duration-200">
-                                Account Management
-                            </Dropdown.Item>
-                            <Dropdown.Item className="hover:bg-gray-700 transition duration-200">
-                                Logout
-                            </Dropdown.Item>
-                            <Dropdown.Divider className="border-gray-600" />
-                            <Dropdown.Item className="text-red-500 hover:bg-red-600 transition duration-200">
-                                Delete Account
-                            </Dropdown.Item>
-                        </Dropdown>
-                    ) :
-                        (
-                            <Link to="/sign-in">
-                                <button className={`px-6 py-3 font-bold rounded-md shadow-lg transition duration-300 max-[600px]:px-2 py-2 font-medium ${theme === 'dark' ? 'bg-gradient-to-r from-teal-500 to-teal-700 text-white' : 'bg-gradient-to-r from-blue-400 to-blue-600 to-lime-500 text-black hover:opacity-90'}`}>
-                                    Sign In
-                                </button>
-                            </Link>
-                        )
-                }
+            <div className="flex gap-2 items-center">
+                {currentUser ? (
+                    <Dropdown
+                        arrowIcon={false}
+                        inline
+                        label={
+                            <Avatar
+                                alt="User Avatar"
+                                img={currentUser.profilePicture}
+                                rounded
+                                className="w-10 h-10 transition-transform hover:scale-110"
+                            />
+                        }
+                        className="relative z-10"
+                    >
+                        <Dropdown.Header className="bg-[#85053a] text-white p-4 rounded-t-md flex">
+                            <div className="pr-3 flex jusify-center items-center text-center">
+                            <FaRegUser className="text-3xl"/>
+                            </div>
+                            <div>
+                            <span className="text-lg font-semibold">{currentUser.username}</span>
+                            <span className="block text-sm text-gray-400">{currentUser.email}</span>
+                            </div>
+
+                        </Dropdown.Header>
+                        <Link to={'/dashboard?tab=profile'}>
+                            <Dropdown.Item className="hover:bg-gray-700 transition duration-200">Profile</Dropdown.Item>
+                        </Link>
+                        <Dropdown.Item className="hover:bg-gray-700 transition duration-200">Add Blog</Dropdown.Item>
+                        <Dropdown.Item className="hover:bg-gray-700 transition duration-200" onClick={handleSignout}>Logout</Dropdown.Item>
+                        <Dropdown.Divider className="border-gray-600" />
+                        <Dropdown.Item className="text-red-500 hover:bg-red-600 transition duration-200" onClick={() => setShowModal(true)}>Delete Account</Dropdown.Item>
+                    </Dropdown>
+                ) : (
+                    <Link to="/sign-in">
+                        <button className={`px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-[#85053a] text-white hover:opacity-90 cursor-pointer max-[350px]:px-3`}>
+                            Sign In
+                        </button>
+                    </Link>
+
+                )}
             </div>
 
-            <button
-                className={`lg:hidden text-xl ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}
-                onClick={toggleNavbar}
-            >
+            <button className={`lg:hidden text-xl text-white`} onClick={toggleNavbar}>
                 {isOpen ? <AiOutlineClose /> : <AiOutlineMenu />}
             </button>
 
-            <div className={`absolute bg-white transition-all duration-300 ease-in-out ${isOpen ? 'mt-[20px] top-16 right-0 w-full h-auto max-[600px]:mt-[-5px]' : 'top-16 right-0 w-0 h-0 overflow-hidden'} ${theme === 'dark' ? 'bg-[rgb(22,29,50)] text-gray-200' : 'bg-gray-50 text-gray-700'}`}>
-                <div className="flex flex-col p-4 z-10 h-[50vh] pt-[13px]">
-                    <Link to="/" className={`py-2 ${Path === '/' ? 'text-blue-500 font-bold' : theme === 'dark' ? 'text-gray-400 hover:text-blue-400' : 'text-gray-600 hover:text-teal-500'}`}>
-                        Home
-                    </Link>
-                    <Link to="/about" className={`py-2 ${Path === '/about' ? 'text-blue-500 font-bold' : theme === 'dark' ? 'text-gray-400 hover:text-blue-400' : 'text-gray-600 hover:text-teal-500'}`}>
-                        About
-                    </Link>
-                    <Link to="/projects" className={`py-2 ${Path === '/projects' ? 'text-blue-500 font-bold' : theme === 'dark' ? 'text-gray-400 hover:text-blue-400' : 'text-gray-600 hover:text-teal-500'}`}>
-                        Projects
-                    </Link>
+            <div className={`absolute bg-white transition-all duration-300 ease-in-out ${isOpen ? 'mt-[20px] top-16 right-0 w-full h-auto max-[600px]:mt-[-5px]' : 'top-16 right-0 w-0 h-0 overflow-hidden'} bg-gray-50 text-gray-700 rounded-lg shadow-lg`}>
+                <div className="flex flex-col p-4 z-10">
+                    {['/', '/about', '/projects'].map((link, index) => (
+                        <Link key={index} to={link} className={`py-2 text-lg ${path === link ? 'text-blue-500 font-bold' : 'text-gray-600 hover:text-teal-500 transition duration-300'}`}>
+                            {link === '/' ? 'Home' : link.charAt(1).toUpperCase() + link.slice(2)}
+                        </Link>
+                    ))}
                 </div>
             </div>
+            <Modal
+                show={showModal}
+                onClose={() => setShowModal(false)}
+                popup
+                size='md'
+            >
+                <Modal.Header />
+                <Modal.Body>
+                    <div className='text-center'>
+                        <h3 className='mb-5 text-lg text-gray-500 dark:text-gray-400'>
+                            Are you sure you want to delete your account?
+                        </h3>
+                        <div className='flex justify-center gap-4'>
+                            <Button color='failure' onClick={handleDeleteUser}>
+                                Yes, I'm sure
+                            </Button>
+                            <Button color='gray' onClick={() => setShowModal(false)}>
+                                No, cancel
+                            </Button>
+                        </div>
+                    </div>
+                </Modal.Body>
+            </Modal>
         </nav>
     );
 }
-
