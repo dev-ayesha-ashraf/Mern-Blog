@@ -17,6 +17,8 @@ export default function Comment({ comment, onLike, onEdit, onDelete }) {
         const data = await res.json();
         if (res.ok) {
           setUser(data);
+          console.log(user.profilePicture , user.username);
+          
         }
       } catch (error) {
         console.log(error.message);
