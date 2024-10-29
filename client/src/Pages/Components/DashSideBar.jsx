@@ -4,6 +4,7 @@ import { MdDashboard, MdOutlinePostAdd } from "react-icons/md";
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { PiUsersFill } from "react-icons/pi";
+import { FaCommentDots } from "react-icons/fa";
 
 export default function DashSideBar() {
     const [isOpen, setIsOpen] = useState(false);
@@ -59,6 +60,13 @@ export default function DashSideBar() {
                                     Users
                                 </Link>
                                 <PiUsersFill className="mr-2 text-xl max-[850px]:mr-2" />
+
+                            </button>
+                            <button className="flex items-center justify-between p-2 my-2 transition-colors duration-200 hover:bg-gray-500 rounded">
+                                <Link to={'/dashboard?tab=comments'}>
+                                    Comments
+                                </Link>
+                                <FaCommentDots className="mr-2 text-xl max-[850px]:mr-2" />
 
                             </button>
                             {/* <Link to='/dashboard?tab=users'>
