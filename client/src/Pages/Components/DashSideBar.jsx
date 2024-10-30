@@ -18,7 +18,7 @@ export default function DashSideBar() {
 
             {/* Sidebar */}
             <div
-                className={`fixed left-0 top-20 mt-1 h-full bg-gray-800 text-white shadow-md transform transition-transform duration-300 ease-in-out max-[750px]:top-15 max-[600px]:top-12 max-[600px]:mt-2 ${isOpen ? 'translate-x-0' : '-translate-x-[8.5rem]'} md:translate-x-0`}
+                className={`z-10 fixed left-0 top-[4rem] mt-4 h-full bg-[#471027] text-white shadow-md transform transition-transform duration-300 ease-in-out max-[750px]:top-15 max-[600px]:mt-2 ${isOpen ? 'translate-x-0' : '-translate-x-[8.5rem]'} md:translate-x-0`}
             >
                 <div className="flex flex-col h-full p-4 max-[850px]:p-0">
                     <div className='flex justify-between'>
@@ -32,21 +32,21 @@ export default function DashSideBar() {
                     </div>
 
                     {/* Sidebar Buttons */}
-                    <button className="flex items-center justify-between p-2 my-2 transition-colors duration-200 hover:bg-gray-500 rounded">
+                    <button className="flex items-center justify-between p-2 my-2 transition-colors duration-200 hover:bg-pink-900 rounded">
                         <Link to={'/dashboard?tab=profile'}>
                             Profile
                         </Link>
                         <FaUser className="mr-2 text-xl max-[850px]:mr-2" />
 
                     </button>
-                    <button className="flex items-center justify-between p-2 my-2 transition-colors duration-200 hover:bg-gray-500 rounded">
+                    <button className="flex items-center justify-between p-2 my-2 transition-colors duration-200 hover:bg-pink-900 rounded">
                         <Link to={'/dashboard?tab=posts'}>
                             Blogs
                         </Link>
                         <MdOutlinePostAdd className="mr-2 text-xl max-[850px]:mr-2" />
 
                     </button>
-                    <button className="flex items-center justify-between p-2 my-2 transition-colors duration-200 hover:bg-gray-500 rounded">
+                    <button className="flex items-center justify-between p-2 my-2 transition-colors duration-200 hover:bg-pink-900 rounded">
                         <Link to={'/dashboard?tab=posts'}>
                             Dashboard
                         </Link>
@@ -55,47 +55,24 @@ export default function DashSideBar() {
                     </button>
                     {currentUser.isAdmin && (
                         <>
-                            <button className="flex items-center justify-between p-2 my-2 transition-colors duration-200 hover:bg-gray-500 rounded">
+                            <button className="flex items-center justify-between p-2 my-2 transition-colors duration-200 hover:bg-pink-900 rounded">
                                 <Link to={'/dashboard?tab=users'}>
                                     Users
                                 </Link>
                                 <PiUsersFill className="mr-2 text-xl max-[850px]:mr-2" />
 
                             </button>
-                            <button className="flex items-center justify-between p-2 my-2 transition-colors duration-200 hover:bg-gray-500 rounded">
+                            <button className="flex items-center justify-between p-2 my-2 transition-colors duration-200 hover:bg-pink-900 rounded">
                                 <Link to={'/dashboard?tab=comments'}>
                                     Comments
                                 </Link>
                                 <FaCommentDots className="mr-2 text-xl max-[850px]:mr-2" />
 
                             </button>
-                            {/* <Link to='/dashboard?tab=users'>
-                                <Sidebar.Item
-                                    active={tab === 'users'}
-                                    // icon={HiOutlineUserGroup}
-                                    as='div'
-                                >
-                                    Users
-                                </Sidebar.Item>
-                            </Link> */}
-                            {/* <Link to='/dashboard?tab=comments'>
-                                <Sidebar.Item
-                                    active={tab === 'comments'}
-                                    // icon={HiAnnotation}
-                                    as='div'
-                                >
-                                    Comments
-                                </Sidebar.Item>
-                            </Link> */}
+                           
+
                         </>
                     )}
-                    <button className="flex items-center justify-between p-2 my-2 transition-colors duration-200 hover:bg-gray-500 rounded">
-                        <Link to={'/dashboard?tab=profile'}>
-                            SignOut
-                        </Link>
-                        <FaSignOutAlt className="mr-2 text-xl max-[850px]:mr-2" />
-
-                    </button>
 
                 </div>
             </div>

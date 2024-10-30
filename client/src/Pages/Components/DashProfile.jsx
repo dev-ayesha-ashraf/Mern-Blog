@@ -4,13 +4,14 @@ import { getDownloadURL, getStorage, uploadBytes, uploadBytesResumable, ref } fr
 import { app } from "../../firebase";
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import { updateFailure, updateStart, updateSuccess,deleteUserStart, deleteUserFailure , deleteUserSuccess , signoutSuccess} from "../../redux/user/userSlice";
+import { updateFailure, updateStart, updateSuccess, deleteUserStart, deleteUserFailure, deleteUserSuccess, signoutSuccess } from "../../redux/user/userSlice";
 import { useDispatch } from "react-redux";
-import { Alert, Modal, ModalBody , Button } from 'flowbite-react'
-import { Link} from "react-router-dom";
+import { Alert, Modal, ModalBody, Button } from 'flowbite-react'
+import { Link } from "react-router-dom";
+import { MdOutlineBrowserUpdated } from "react-icons/md";
 
 export default function DashProfile() {
-    const { currentUser , error , loading } = useSelector((state) => state.user);
+    const { currentUser, error, loading } = useSelector((state) => state.user);
     const [imageFile, setImagefile] = useState(null);
     const [imageFileUrl, setImageFileUrl] = useState(null);
     const [imageFileUploadingProgress, setImageFileUploadingProgress] = useState(null);
@@ -135,25 +136,25 @@ export default function DashProfile() {
             dispatch(deleteUserFailure(error.message));
         }
     };
-    
+
     const handleSignout = async () => {
         try {
-          const res = await fetch('/api/user/signout', {
-            method: 'POST',
-          });
-          const data = await res.json();
-          if (!res.ok) {
-            console.log(data.message);
-          } else {
-            dispatch(signoutSuccess());
-          }
+            const res = await fetch('/api/user/signout', {
+                method: 'POST',
+            });
+            const data = await res.json();
+            if (!res.ok) {
+                console.log(data.message);
+            } else {
+                dispatch(signoutSuccess());
+            }
         } catch (error) {
-          console.log(error.message);
+            console.log(error.message);
         }
-      };
+    };
     return (
         <div className="max-w-lg mx-auto text-center rounded-lg max-[650px]:ml-[10vw] max-[450px]:ml-[17vw] pt-[15vh]">
-            <h1 className="my-6 text-center font-semibold text-2xl md:text-3xl text-gray-800">Profile</h1>
+            <h1 className="my-6 text-center font-semibold text-2xl md:text-3xl text-indigo-800">Profile</h1>
             <form className="flex flex-col space-y-6" onSubmit={handleSubmit}>
                 <input type="file" accept="image/*" onChange={handleImageChange} ref={filePickerRef} className="hidden" />
 
@@ -177,7 +178,7 @@ export default function DashProfile() {
                     <img
                         src={imageFileUrl || currentUser.profilePicture}
                         alt="Profile"
-                        className={`rounded-full w-full h-full border-4 md:border-8 object-cover border-gray-800 shadow-2xl ${imageFileUploadingProgress && imageFileUploadingProgress < 100 && 'opacity-60'}`}
+                        className={`rounded-full w-full h-full border-4 md:border-8 object-cover border-[#85053a] shadow-2xl ${imageFileUploadingProgress && imageFileUploadingProgress < 100 && 'opacity-60'}`}
                     />
                 </div>
                 {upadeUserSuccess && (
@@ -205,6 +206,7 @@ export default function DashProfile() {
                     defaultValue={currentUser.username}
                     onChange={handleChange}
                     className="text-center text-gray-700"
+                    style={{ outline: "none !important", boxShadow: "none !important" }}
                 />
                 <TextInput
                     type="email"
@@ -212,26 +214,26 @@ export default function DashProfile() {
                     placeholder="Email"
                     defaultValue={currentUser.email}
                     onChange={handleChange}
-                    className="text-center text-gray-700"
+                    className="text-center text-gray-700 "
                 />
                 <TextInput
                     type="password"
                     id="password"
                     placeholder="Password"
                     onChange={handleChange}
-                    className="text-center text-gray-700"
+                    className="text-center text-gray-700 "
                 />
-                <button className="bg-yellow-500 py-2 rounded-lg hover:bg-yellow-600 transition duration-300" disabled={loading || imageFileUploading}>
+                <button className="px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-[#85053a] text-white hover:opacity-90 cursor-pointer" disabled={loading || imageFileUploading}>
                     {
                         loading ? 'Updating...' : 'Update'
                     }
                 </button>
                 <Link to='/create-post'>
-                <button className="bg-yellow-500 py-2 rounded-lg hover:bg-yellow-600 transition duration-300">
-                    Create A Post
-                </button>
+                    <button className="w-full px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-[#85053a] text-white hover:opacity-90 cursor-pointer">
+                        Create A Post
+                    </button>
                 </Link>
-             
+
                 <div className="flex justify-between items-center mt-4 text-sm md:text-base text-gray-600">
                     <span className="cursor-pointer hover:text-red-500 transition duration-300" onClick={() => setShowModal(true)}>
                         Delete Account
