@@ -47,7 +47,7 @@ export default function DashSideBar() {
 
                     </button>
                     <button className="flex items-center justify-between p-2 my-2 transition-colors duration-200 hover:bg-pink-900 rounded">
-                        <Link to={'/dashboard?tab=posts'}>
+                        <Link to={'/dashboard?tab=dash'}>
                             Dashboard
                         </Link>
                         <MdDashboard className="mr-2 text-xl max-[850px]:mr-2" />

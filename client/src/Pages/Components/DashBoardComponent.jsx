@@ -124,9 +124,12 @@ export default function DashboardComp() {
         <div className='flex flex-col w-full md:w-auto shadow-md p-2 rounded-md dark:bg-gray-800'>
           <div className='flex justify-between  p-3 text-sm font-semibold'>
             <h1 className='text-center p-2'>Recent users</h1>
-            <Button outline gradientDuoTone='purpleToPink'>
+            {/* <Button outline gradientDuoTone='purpleToPink'>
+           
+            </Button> */}
+            <button className='px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-[#85053a] text-white hover:opacity-90 cursor-pointer'>
               <Link to={'/dashboard?tab=users'}>See all</Link>
-            </Button>
+            </button>
           </div>
           <Table hoverable>
             <Table.Head>
@@ -153,9 +156,12 @@ export default function DashboardComp() {
         <div className='flex flex-col w-full md:w-auto shadow-md p-2 rounded-md dark:bg-gray-800'>
           <div className='flex justify-between  p-3 text-sm font-semibold'>
             <h1 className='text-center p-2'>Recent comments</h1>
-            <Button outline gradientDuoTone='purpleToPink'>
+            {/* <Button outline gradientDuoTone='purpleToPink'>
+              
+            </Button> */}
+            <button className='px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-[#85053a] text-white hover:opacity-90 cursor-pointer'>
               <Link to={'/dashboard?tab=comments'}>See all</Link>
-            </Button>
+            </button>
           </div>
           <Table hoverable>
             <Table.Head>
@@ -167,7 +173,7 @@ export default function DashboardComp() {
                 <Table.Body key={comment._id} className='divide-y'>
                   <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
                     <Table.Cell className='w-96'>
-                        <p className='line-clamp-2'>{comment.content}</p>
+                      <p className='line-clamp-2'>{comment.content}</p>
                     </Table.Cell>
                     <Table.Cell>{comment.numberOfLikes}</Table.Cell>
                   </Table.Row>
@@ -178,15 +184,17 @@ export default function DashboardComp() {
         <div className='flex flex-col w-full md:w-auto shadow-md p-2 rounded-md dark:bg-gray-800'>
           <div className='flex justify-between  p-3 text-sm font-semibold'>
             <h1 className='text-center p-2'>Recent posts</h1>
-            <Button outline gradientDuoTone='purpleToPink'>
+            {/* <Button outline gradientDuoTone='purpleToPink'>
+           
+            </Button> */}
+            <button className='px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-[#85053a] text-white hover:opacity-90 cursor-pointer'>
               <Link to={'/dashboard?tab=posts'}>See all</Link>
-            </Button>
+            </button>
           </div>
           <Table hoverable>
             <Table.Head>
               <Table.HeadCell>Post image</Table.HeadCell>
               <Table.HeadCell>Post Title</Table.HeadCell>
-              <Table.HeadCell>Category</Table.HeadCell>
             </Table.Head>
             {posts &&
               posts.map((post) => (
@@ -200,7 +208,6 @@ export default function DashboardComp() {
                       />
                     </Table.Cell>
                     <Table.Cell className='w-96'>{post.title}</Table.Cell>
-                    <Table.Cell className='w-5'>{post.category}</Table.Cell>
                   </Table.Row>
                 </Table.Body>
               ))}

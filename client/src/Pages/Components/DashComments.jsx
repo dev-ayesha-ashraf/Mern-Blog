@@ -84,7 +84,7 @@ export default function DashComments() {
   };
 
   return (
-    <div className='w-[85%] ml-[15%] pt-20 table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
+    <div className='w-[90%] pl-[10%] pt-[10%] max-[900px]:pt-[25%] table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
       {currentUser.isAdmin && loading && <p>Loading comments...</p>}
       {errorMessage && <Alert color="failure">{errorMessage}</Alert>}
       {currentUser.isAdmin && comments.length > 0 ? (
