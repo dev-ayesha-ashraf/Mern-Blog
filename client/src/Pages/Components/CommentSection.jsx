@@ -138,7 +138,7 @@ export default function CommentSection({ postId }) {
       {currentUser && (
         <form
           onSubmit={handleSubmit}
-          className='border border-teal-500 rounded-md p-3'
+          className='border border-[#85053a] rounded-md p-3'
         >
           <Textarea
             placeholder='Add a comment...'
@@ -151,9 +151,9 @@ export default function CommentSection({ postId }) {
             <p className='text-gray-500 text-xs'>
               {200 - comment.length} characters remaining
             </p>
-            <Button outline gradientDuoTone='purpleToBlue' type='submit'>
-              Submit
-            </Button>
+            <button type='submit' className='px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-[#85053a] text-white hover:opacity-90 cursor-pointer'>
+              Comment
+            </button>
           </div>
           {commentError && (
             <Alert color='failure' className='mt-5'>
@@ -168,7 +168,7 @@ export default function CommentSection({ postId }) {
         <>
           <div className='text-sm my-5 flex items-center gap-1'>
             <p>Comments</p>
-            <div className='border border-gray-400 py-1 px-2 rounded-sm'>
+            <div className='border border-[#85053a] py-1 px-2 rounded-sm'>
               <p>{comments.length}</p>
             </div>
           </div>

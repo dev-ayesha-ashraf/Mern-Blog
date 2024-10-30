@@ -17,8 +17,8 @@ export default function Comment({ comment, onLike, onEdit, onDelete }) {
         const data = await res.json();
         if (res.ok) {
           setUser(data);
-          console.log(user.profilePicture , user.username);
-          
+          console.log(user.profilePicture, user.username);
+
         }
       } catch (error) {
         console.log(error.message);
@@ -76,46 +76,34 @@ export default function Comment({ comment, onLike, onEdit, onDelete }) {
               value={editedContent}
               onChange={(e) => setEditedContent(e.target.value)}
             />
-            <div className='flex justify-end gap-2 text-xs'>
-              <Button
-                type='button'
-                size='sm'
-                gradientDuoTone='purpleToBlue'
-                onClick={handleSave}
-              >
+            <div className='flex gap-2 text-xs'>
+              <button onClick={handleSave} className='border border-[#85053a] mt-3 mb-3 px-6 py-2 font-bold rounded-md hover:shadow-lg transition duration-300 hover:bg-[#85053a] hover:text-white text-black hover:opacity-90 cursor-pointer'>
                 Save
-              </Button>
-              <Button
-                type='button'
-                size='sm'
-                gradientDuoTone='purpleToBlue'
-                outline
-                onClick={() => setIsEditing(false)}
-              >
+              </button>
+              <button onClick={() => setIsEditing(false)} className='border border-[#85053a] mt-3 mb-3 px-6 py-2 font-bold rounded-md hover:shadow-lg transition duration-300 hover:bg-[#85053a] hover:text-white text-black hover:opacity-90 cursor-pointer'>
                 Cancel
-              </Button>
+              </button>
             </div>
           </>
         ) : (
           <>
             <p className='text-gray-500 pb-2'>{comment.content}</p>
-            <div className='flex items-center pt-2 text-xs border-t dark:border-gray-700 max-w-fit gap-2'>
+            <div className='flex items-center pt-2 text-xs border-t dark:border-gray-70 max-w-fit gap-2'>
               <button
                 type='button'
                 onClick={() => onLike(comment._id)}
-                className={`text-gray-400 hover:text-blue-500 ${
-                  currentUser &&
+                className={`text-gray-400 hover:text-blue-500 ${currentUser &&
                   comment.likes.includes(currentUser._id) &&
                   '!text-blue-500'
-                }`}
+                  }`}
               >
                 <FaThumbsUp className='text-sm' />
               </button>
               <p className='text-gray-400'>
                 {comment.numberOfLikes > 0 &&
                   comment.numberOfLikes +
-                    ' ' +
-                    (comment.numberOfLikes === 1 ? 'like' : 'likes')}
+                  ' ' +
+                  (comment.numberOfLikes === 1 ? 'like' : 'likes')}
               </p>
               {currentUser &&
                 (currentUser._id === comment.userId || currentUser.isAdmin) && (

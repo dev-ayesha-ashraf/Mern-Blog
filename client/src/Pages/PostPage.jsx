@@ -1,7 +1,6 @@
 import { Button, Spinner } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-// import CallToAction from '../components/CallToAction';
 import CommentSection from './Components/CommentSection';
 import PostCard from './Components/PostCard';
 
@@ -59,21 +58,16 @@ export default function PostPage() {
     );
   return (
     <main className='pt-20 flex flex-col max-w-6xl mx-auto min-h-screen'>
-      <h1 className='text-3xl mt-10 p-3 text-center font-serif max-w-2xl mx-auto lg:text-4xl'>
+      <h1 className='text-3xl mt-10 text-center max-w-2xl mx-auto lg:text-4xl text-indigo-800'>
         {post && post.title}
       </h1>
-      <Link
-        to={`/search?category=${post && post.category}`}
-        className='self-center mt-5'
-      >
-        {/* <Button color='gray' pill size='xs'>
-          {post && post.category}
-        </Button> */}
-      </Link>
+      <div className='w-full flex justify-center text-center items-center mt-2'>
+        <span className='w-[100px] h-[3px] bg-[#85053a]'></span>
+      </div>
       <img
         src={post && post.image}
         alt={post && post.title}
-        className='mt-10 p-3 max-h-[600px] w-full object-cover'
+        className='mt-3 p-3 max-h-[600px] w-full object-cover'
       />
       <div className='flex justify-between p-3 border-b border-slate-500 mx-auto w-full max-w-2xl text-xs'>
         <span>{post && new Date(post.createdAt).toLocaleDateString()}</span>
@@ -86,12 +80,14 @@ export default function PostPage() {
         dangerouslySetInnerHTML={{ __html: post && post.content }}
       ></div>
       <div className='max-w-4xl mx-auto w-full'>
-        {/* <CallToAction /> */}
       </div>
       <CommentSection postId={post._id} />
 
       <div className='flex flex-col justify-center items-center mb-5'>
-        <h1 className='text-xl mt-5'>Recent articles</h1>
+        <h1 className='text-3xl font-semibold text-center mt-5'>Recent articles</h1>
+        <div className='w-full flex justify-center text-center items-center mt-2 mb-10'>
+          <span className='w-[100px] h-[3px] bg-[#85053a]'></span>
+        </div>
         <div className='flex flex-wrap gap-5 mt-5 justify-center'>
           {recentPosts &&
             recentPosts.map((post) => <PostCard key={post._id} post={post} />)}
