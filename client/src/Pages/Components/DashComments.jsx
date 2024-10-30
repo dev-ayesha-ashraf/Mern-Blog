@@ -1,8 +1,7 @@
-import { Modal, Table, Button } from 'flowbite-react';
+import { Modal, Table, Button, Alert } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
-import { FaCheck, FaTimes } from 'react-icons/fa';
 
 export default function DashComments() {
   const { currentUser } = useSelector((state) => state.user);
@@ -10,69 +9,84 @@ export default function DashComments() {
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [commentIdToDelete, setCommentIdToDelete] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
   useEffect(() => {
     const fetchComments = async () => {
+      setLoading(true);
+      setErrorMessage(''); // Reset error message
       try {
         const res = await fetch(`/api/comment/getcomments`);
         const data = await res.json();
         if (res.ok) {
           setComments(data.comments);
-          if (data.comments.length < 9) {
-            setShowMore(false);
-          }
+          setShowMore(data.comments.length >= 9);
+        } else {
+          setErrorMessage(data.message || 'Failed to fetch comments.');
         }
       } catch (error) {
-        console.log(error.message);
+        setErrorMessage('An error occurred while fetching comments.');
+        console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
+
     if (currentUser.isAdmin) {
       fetchComments();
     }
-  }, [currentUser._id]);
+  }, [currentUser]);
 
   const handleShowMore = async () => {
+    setLoading(true);
+    setErrorMessage(''); // Reset error message
     const startIndex = comments.length;
+
     try {
-      const res = await fetch(
-        `/api/comment/getcomments?startIndex=${startIndex}`
-      );
+      const res = await fetch(`/api/comment/getcomments?startIndex=${startIndex}`);
       const data = await res.json();
       if (res.ok) {
         setComments((prev) => [...prev, ...data.comments]);
-        if (data.comments.length < 9) {
-          setShowMore(false);
-        }
+        setShowMore(data.comments.length >= 9);
+      } else {
+        setErrorMessage(data.message || 'Failed to fetch more comments.');
       }
     } catch (error) {
-      console.log(error.message);
+      setErrorMessage('An error occurred while fetching more comments.');
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleDeleteComment = async () => {
     setShowModal(false);
+    setLoading(true);
+    setErrorMessage(''); // Reset error message
+
     try {
-      const res = await fetch(
-        `/api/comment/deleteComment/${commentIdToDelete}`,
-        {
-          method: 'DELETE',
-        }
-      );
+      const res = await fetch(`/api/comment/deleteComment/${commentIdToDelete}`, {
+        method: 'DELETE',
+      });
       const data = await res.json();
       if (res.ok) {
-        setComments((prev) =>
-          prev.filter((comment) => comment._id !== commentIdToDelete)
-        );
-        setShowModal(false);
+        setComments((prev) => prev.filter((comment) => comment._id !== commentIdToDelete));
       } else {
-        console.log(data.message);
+        setErrorMessage(data.message || 'Failed to delete comment.');
       }
     } catch (error) {
-      console.log(error.message);
+      setErrorMessage('An error occurred while deleting the comment.');
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className='w-[85%] ml-[15%] pt-20 table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
+      {currentUser.isAdmin && loading && <p>Loading comments...</p>}
+      {errorMessage && <Alert color="failure">{errorMessage}</Alert>}
       {currentUser.isAdmin && comments.length > 0 ? (
         <>
           <Table hoverable className='shadow-md'>
@@ -135,10 +149,10 @@ export default function DashComments() {
               Are you sure you want to delete this comment?
             </h3>
             <div className='flex justify-center gap-4'>
-              <Button color='failure' onClick={handleDeleteComment}>
-                Yes, I'm sure
+              <Button color='failure' onClick={handleDeleteComment} disabled={loading}>
+                {loading ? 'Deleting...' : "Yes, I'm sure"}
               </Button>
-              <Button color='gray' onClick={() => setShowModal(false)}>
+              <Button color='gray' onClick={() => setShowModal(false)} disabled={loading}>
                 No, cancel
               </Button>
             </div>

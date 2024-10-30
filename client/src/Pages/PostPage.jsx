@@ -1,6 +1,7 @@
 import { Button, Spinner } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet'; // Import Helmet
 import CommentSection from './Components/CommentSection';
 import PostCard from './Components/PostCard';
 
@@ -36,28 +37,38 @@ export default function PostPage() {
   }, [postSlug]);
 
   useEffect(() => {
-    try {
-      const fetchRecentPosts = async () => {
+    const fetchRecentPosts = async () => {
+      try {
         const res = await fetch(`/api/post/getposts?limit=3`);
         const data = await res.json();
         if (res.ok) {
           setRecentPosts(data.posts);
         }
-      };
-      fetchRecentPosts();
-    } catch (error) {
-      console.log(error.message);
-    }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    fetchRecentPosts();
   }, []);
 
-  if (loading)
+  if (loading) {
     return (
       <div className='flex justify-center items-center min-h-screen'>
         <Spinner size='xl' />
       </div>
     );
+  }
+
+  // Define the title and description for the Helmet
+  const title = post ? post.title : "Loading...";
+  const description = post ? post.content.substring(0, 160) + "..." : "Loading post content...";
+
   return (
     <main className='pt-20 flex flex-col max-w-6xl mx-auto min-h-screen'>
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+      </Helmet>
       <h1 className='text-3xl mt-10 text-center max-w-2xl mx-auto lg:text-4xl text-indigo-800'>
         {post && post.title}
       </h1>
@@ -79,18 +90,14 @@ export default function PostPage() {
         className='p-3 max-w-2xl mx-auto w-full post-content'
         dangerouslySetInnerHTML={{ __html: post && post.content }}
       ></div>
-      <div className='max-w-4xl mx-auto w-full'>
-      </div>
       <CommentSection postId={post._id} />
-
       <div className='flex flex-col justify-center items-center mb-5'>
         <h1 className='text-3xl font-semibold text-center mt-5'>Recent articles</h1>
         <div className='w-full flex justify-center text-center items-center mt-2 mb-10'>
           <span className='w-[100px] h-[3px] bg-[#85053a]'></span>
         </div>
         <div className='flex flex-wrap gap-5 mt-5 justify-center'>
-          {recentPosts &&
-            recentPosts.map((post) => <PostCard key={post._id} post={post} />)}
+          {recentPosts && recentPosts.map((post) => <PostCard key={post._id} post={post} />)}
         </div>
       </div>
     </main>

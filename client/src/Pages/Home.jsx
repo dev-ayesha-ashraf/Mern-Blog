@@ -2,7 +2,9 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import PostCard from './Components/PostCard';
-import { FaTwitter, FaFacebook, FaArrowRight } from "react-icons/fa";
+import { FaArrowRight } from "react-icons/fa";
+import { Helmet } from 'react-helmet'; // Import Helmet
+
 const TypingText = ({ text, tag: Tag }) => {
   const [displayedText, setDisplayedText] = useState('');
   const typingSpeed = 90;
@@ -26,6 +28,7 @@ const TypingText = ({ text, tag: Tag }) => {
   const MotionTag = motion[Tag];
   return <MotionTag className="text-5xl font-semibold text-indigo-900 text-center max-[570px]:text-4xl max-[420px]:text-2xl">{displayedText}</MotionTag>;
 };
+
 export default function Home() {
   const [posts, setPosts] = useState([]);
 
@@ -37,8 +40,15 @@ export default function Home() {
     };
     fetchPosts();
   }, []);
+
   return (
     <div>
+      <Helmet>
+        <title>Home - Techie Blog</title>
+        <meta name="description" content="Welcome to Techie Blog, where you'll find a variety of articles and tutorials on many topics." />
+        <meta name="keywords" content="blog, tech, tutorials, articles, programming" />
+      </Helmet>
+      
       <div className='flex flex-col gap-6 pt-28 px-3 max-w-6xl mx-auto '>
         <TypingText text="Welcome To Techie Blog" tag="h1" />
         <p className='text-gray-500 text-xl text-center'>
@@ -50,9 +60,7 @@ export default function Home() {
         >
           <span>View all posts</span>
           <FaArrowRight className="h-5 w-5" />
-
         </Link>
-
       </div>
 
       <div className='max-w-6xl mx-auto p-3 flex flex-col gap-8 py-7'>
@@ -73,7 +81,6 @@ export default function Home() {
             >
               <span>View all posts</span>
               <FaArrowRight className="h-5 w-5" />
-
             </Link>
           </div>
         )}

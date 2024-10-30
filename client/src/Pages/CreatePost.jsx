@@ -1,65 +1,59 @@
-import { Alert, Button, FileInput, Select, TextInput } from 'flowbite-react';
+import { Alert, Button, FileInput, TextInput } from 'flowbite-react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-} from 'firebase/storage';
+import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { app } from '../firebase';
 import { useState } from 'react';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 export default function CreatePost() {
   const [file, setFile] = useState(null);
   const [imageUploadProgress, setImageUploadProgress] = useState(null);
   const [imageUploadError, setImageUploadError] = useState(null);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({ title: '', content: '' });
   const [publishError, setPublishError] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
 
-  const handleUpdloadImage = async () => {
-    try {
-      if (!file) {
-        setImageUploadError('Please select an image');
-        return;
-      }
-      setImageUploadError(null);
-      const storage = getStorage(app);
-      const fileName = new Date().getTime() + '-' + file.name;
-      const storageRef = ref(storage, fileName);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-      uploadTask.on(
-        'state_changed',
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          setImageUploadProgress(progress.toFixed(0));
-        },
-        (error) => {
-          setImageUploadError('Image upload failed');
-          setImageUploadProgress(null);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setImageUploadProgress(null);
-            setImageUploadError(null);
-            setFormData({ ...formData, image: downloadURL });
-          });
-        }
-      );
-    } catch (error) {
-      setImageUploadError('Image upload failed');
-      setImageUploadProgress(null);
-      console.log(error);
+  const handleUploadImage = async () => {
+    if (!file) {
+      setImageUploadError('Please select an image');
+      return;
     }
+
+    setImageUploadError(null);
+    const storage = getStorage(app);
+    const fileName = `${Date.now()}-${file.name}`;
+    const storageRef = ref(storage, fileName);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on(
+      'state_changed',
+      (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setImageUploadProgress(progress.toFixed(0));
+      },
+      (error) => {
+        setImageUploadError('Image upload failed: ' + error.message);
+        setImageUploadProgress(null);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setImageUploadProgress(null);
+          setFormData((prev) => ({ ...prev, image: downloadURL }));
+        });
+      }
+    );
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+
     try {
       const res = await fetch('/api/post/create', {
         method: 'POST',
@@ -69,21 +63,30 @@ export default function CreatePost() {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
+
       if (!res.ok) {
-        setPublishError(data.message);
+        setPublishError(data.message || 'Failed to publish post');
         return;
       }
-      if (res.ok) {
-        setPublishError(null);
-        navigate(`/post/${data.slug}`);
-      }
+
+      // Reset form after successful submission
+      setFormData({ title: '', content: '', image: '' });
+      setFile(null);
+      navigate(`/post/${data.slug}`);
     } catch (error) {
-      setPublishError('Something went wrong');
+      setPublishError('Something went wrong: ' + error.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
   return (
     <div className='pt-20 max-w-3xl mx-auto min-h-screen'>
-      <h1 className='text-center text-3xl my-7 font-semibold mb-3'>Create a post</h1>
+      <Helmet>
+        <title>Create a Post</title>
+        <meta name="description" content="Create a new post to share your thoughts and ideas." />
+      </Helmet>
+      <h1 className='text-center text-3xl my-7 font-semibold mb-3'>Create a Post</h1>
       <div className='w-full flex justify-center text-center items-center mb-5'>
         <span className='w-[100px] h-[3px] bg-[#85053a]'></span>
       </div>
@@ -93,26 +96,25 @@ export default function CreatePost() {
         </Alert>
       )}
       <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
-        <div className='flex flex-col gap-4 sm:flex-row justify-between'>
-          <TextInput
-            type='text'
-            placeholder='Title'
-            required
-            id='title'
-            className='flex-1'
-            onChange={(e) =>
-              setFormData({ ...formData, title: e.target.value })
-            }
-          />
-        </div>
+        <TextInput
+          type='text'
+          placeholder='Title'
+          required
+          id='title'
+          className='flex-1'
+          value={formData.title}
+          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+        />
         <div className='flex gap-4 items-center justify-between border-4 border-[#85053a] border-dotted p-3 max-[500px]:flex-col'>
           <FileInput
             type='file'
             accept='image/*'
             onChange={(e) => setFile(e.target.files[0])}
           />
-          <button onClick={handleUpdloadImage}
-            disabled={imageUploadProgress}
+          <button
+            type='button'
+            onClick={handleUploadImage}
+            disabled={imageUploadProgress !== null}
             className='px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-[#85053a] text-white hover:opacity-90 cursor-pointer'>
             {imageUploadProgress ? (
               <div className='w-16 h-16'>
@@ -130,7 +132,7 @@ export default function CreatePost() {
         {formData.image && (
           <img
             src={formData.image}
-            alt='upload'
+            alt='Uploaded'
             className='w-full h-72 object-cover'
           />
         )}
@@ -139,13 +141,15 @@ export default function CreatePost() {
           placeholder='Write something...'
           className='h-72 mb-12'
           required
-          onChange={(value) => {
-            setFormData({ ...formData, content: value });
-          }}
+          value={formData.content}
+          onChange={(value) => setFormData({ ...formData, content: value })}
         />
-<button type='submit' className='px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-[#85053a] text-white hover:opacity-90 cursor-pointer'>
-Publish
-</button>
+        <button
+          type='submit'
+          className='px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-[#85053a] text-white hover:opacity-90 cursor-pointer'
+          disabled={isSubmitting}>
+          {isSubmitting ? 'Publishing...' : 'Publish'}
+        </button>
       </form>
     </div>
   );
