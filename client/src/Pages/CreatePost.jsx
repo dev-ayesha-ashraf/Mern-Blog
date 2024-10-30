@@ -69,7 +69,6 @@ export default function CreatePost() {
         return;
       }
 
-      // Reset form after successful submission
       setFormData({ title: '', content: '', image: '' });
       setFile(null);
       navigate(`/post/${data.slug}`);

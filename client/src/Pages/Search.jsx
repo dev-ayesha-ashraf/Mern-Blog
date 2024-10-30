@@ -1,6 +1,5 @@
-import { Button, Select, TextInput } from 'flowbite-react';
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation} from 'react-router-dom';
 import PostCard from './Components/PostCard';
 
 export default function Search() {
@@ -9,15 +8,11 @@ export default function Search() {
     sort: 'desc',
   });
 
-  console.log(sidebarData);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showMore, setShowMore] = useState(false);
 
   const location = useLocation();
-
-  const navigate = useNavigate();
-
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const searchTermFromUrl = urlParams.get('searchTerm');
@@ -52,25 +47,6 @@ export default function Search() {
     };
     fetchPosts();
   }, [location.search]);
-
-  const handleChange = (e) => {
-    if (e.target.id === 'searchTerm') {
-      setSidebarData({ ...sidebarData, searchTerm: e.target.value });
-    }
-    if (e.target.id === 'sort') {
-      const order = e.target.value || 'desc';
-      setSidebarData({ ...sidebarData, sort: order });
-    }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const urlParams = new URLSearchParams(location.search);
-    urlParams.set('searchTerm', sidebarData.searchTerm);
-    urlParams.set('sort', sidebarData.sort);
-    const searchQuery = urlParams.toString();
-    navigate(`/search?${searchQuery}`);
-  };
 
   const handleShowMore = async () => {
     const numberOfPosts = posts.length;

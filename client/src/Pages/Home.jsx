@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import PostCard from './Components/PostCard';
 import { FaArrowRight } from "react-icons/fa";
-import { Helmet } from 'react-helmet'; // Import Helmet
+import { Helmet } from 'react-helmet'; 
 
 const TypingText = ({ text, tag: Tag }) => {
   const [displayedText, setDisplayedText] = useState('');

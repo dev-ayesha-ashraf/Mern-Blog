@@ -5,7 +5,6 @@ import SignIn from "./Pages/SignIn"
 import SignUp from "./Pages/SignUp"
 import Dashboard from "./Pages/Dashboard"
 import Header from "./Pages/Components/Header"
-// import Footer from "./Pages/Components/Footer"
 import PrivateRoute from "./Pages/Components/PrivateRoutes"
 import CreatePost from "./Pages/CreatePost"
 import UpdatePost from "./Pages/UpdatePost"
@@ -31,7 +30,6 @@ export default function App() {
         </Route>
         <Route path='/post/:postSlug' element={<PostPage />} />
       </Routes>
-      {/* <Footer /> */}
     </BrowserRouter>
   )
 }

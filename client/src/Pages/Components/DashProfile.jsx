@@ -6,9 +6,8 @@ import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { updateFailure, updateStart, updateSuccess, deleteUserStart, deleteUserFailure, deleteUserSuccess, signoutSuccess } from "../../redux/user/userSlice";
 import { useDispatch } from "react-redux";
-import { Alert, Modal, ModalBody, Button } from 'flowbite-react'
+import { Alert, Modal, Button } from 'flowbite-react'
 import { Link } from "react-router-dom";
-import { MdOutlineBrowserUpdated } from "react-icons/md";
 
 export default function DashProfile() {
     const { currentUser, error, loading } = useSelector((state) => state.user);
@@ -36,16 +35,6 @@ export default function DashProfile() {
         }
     }, [imageFile])
     const uploadImage = async () => {
-        // service firebase.storage {
-        //     match /b/{bucket}/o {
-        //       match /{allPaths=**} {
-        //         allow read;
-        //         allow write: if
-        //         request.resource.size < 2 * 1024 * 1024 &&
-        //         request.resource.contentType.matches('image/.*')
-        //       }
-        //     }
-        //   }
         setImageFileUploading(true)
         setImageFileUploadingError(null);
         const storage = getStorage(app);
@@ -78,8 +67,6 @@ export default function DashProfile() {
             }
         )
     }
-
-    // Placeholder function for handling input changes
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.id]: e.target.value })
     };

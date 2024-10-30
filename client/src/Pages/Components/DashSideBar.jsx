@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FaUser, FaSignOutAlt, FaBars, FaTimes } from 'react-icons/fa';
+import { FaUser, FaBars, FaTimes } from 'react-icons/fa';
 import { MdDashboard, MdOutlinePostAdd } from "react-icons/md";
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -15,8 +15,6 @@ export default function DashSideBar() {
     const { currentUser } = useSelector((state) => state.user);
     return (
         <div>
-
-            {/* Sidebar */}
             <div
                 className={`z-10 fixed left-0 top-[4rem] mt-4 h-full bg-[#471027] text-white shadow-md transform transition-transform duration-300 ease-in-out max-[750px]:top-15 max-[600px]:mt-2 ${isOpen ? 'translate-x-0' : '-translate-x-[8.5rem]'} md:translate-x-0`}
             >
@@ -30,8 +28,6 @@ export default function DashSideBar() {
                             {isOpen ? <FaTimes /> : <FaBars />}
                         </button>
                     </div>
-
-                    {/* Sidebar Buttons */}
                     <button className="flex items-center justify-between p-2 my-2 transition-colors duration-200 hover:bg-pink-900 rounded">
                         <Link to={'/dashboard?tab=profile'}>
                             Profile
@@ -69,15 +65,13 @@ export default function DashSideBar() {
                                 <FaCommentDots className="mr-2 text-xl max-[850px]:mr-2" />
 
                             </button>
-                           
+
 
                         </>
                     )}
 
                 </div>
             </div>
-
-            {/* Overlay for Small Screens */}
             {isOpen && (
                 <div
                     onClick={toggleSidebar}

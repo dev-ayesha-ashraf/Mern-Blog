@@ -15,7 +15,7 @@ export default function DashComments() {
   useEffect(() => {
     const fetchComments = async () => {
       setLoading(true);
-      setErrorMessage(''); // Reset error message
+      setErrorMessage(''); 
       try {
         const res = await fetch(`/api/comment/getcomments`);
         const data = await res.json();
@@ -40,7 +40,7 @@ export default function DashComments() {
 
   const handleShowMore = async () => {
     setLoading(true);
-    setErrorMessage(''); // Reset error message
+    setErrorMessage(''); 
     const startIndex = comments.length;
 
     try {
@@ -63,7 +63,7 @@ export default function DashComments() {
   const handleDeleteComment = async () => {
     setShowModal(false);
     setLoading(true);
-    setErrorMessage(''); // Reset error message
+    setErrorMessage(''); 
 
     try {
       const res = await fetch(`/api/comment/deleteComment/${commentIdToDelete}`, {

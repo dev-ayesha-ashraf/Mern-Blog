@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FaHeart, FaStar } from 'react-icons/fa'; // Example icons
+import { FaHeart, FaStar } from 'react-icons/fa'; 
 import HomeImage from "/src/blogHome.webp";
 import { Helmet } from 'react-helmet';
 
 const TypingText = ({ text, tag: Tag }) => {
   const [displayedText, setDisplayedText] = useState('');
-  const typingSpeed = 50; // Speed of typing in milliseconds
+  const typingSpeed = 50; 
 
   const typeText = (text) => {
     let i = 0;
@@ -16,7 +16,6 @@ const TypingText = ({ text, tag: Tag }) => {
         i++;
       } else {
         clearInterval(interval);
-        // Optionally add delete effect here
       }
     }, typingSpeed);
   };

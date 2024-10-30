@@ -1,7 +1,7 @@
 import { Button, Spinner } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Helmet } from 'react-helmet'; // Import Helmet
+import { Helmet } from 'react-helmet'; 
 import CommentSection from './Components/CommentSection';
 import PostCard from './Components/PostCard';
 
@@ -58,8 +58,6 @@ export default function PostPage() {
       </div>
     );
   }
-
-  // Define the title and description for the Helmet
   const title = post ? post.title : "Loading...";
   const description = post ? post.content.substring(0, 160) + "..." : "Loading post content...";
 

@@ -46,7 +46,7 @@ export default function SignUp() {
       setErrorMessage(error.message);
     }
     finally {
-      setLoading(false); // Ensure loader stops in all cases
+      setLoading(false); 
     }
   };
 
@@ -84,7 +84,6 @@ export default function SignUp() {
             id='username'
             placeholder="Username"
             onChange={handleChange}
-            // required
             className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
           />
           <input
@@ -92,7 +91,6 @@ export default function SignUp() {
             id='email'
             placeholder="Email"
             onChange={handleChange}
-            // required
             className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
           />
           <input
@@ -101,7 +99,6 @@ export default function SignUp() {
             placeholder="Password"
 
             onChange={handleChange}
-            // required
             className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
           />
           <button

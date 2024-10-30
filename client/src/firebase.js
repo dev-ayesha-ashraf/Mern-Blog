@@ -2,7 +2,6 @@
 import { initializeApp } from "firebase/app";
 
 // Log to check if the variable is defined
-console.log('VITE_FIREBASE_API_KEY:', import.meta.env.VITE_FIREBASE_API_KEY);
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -16,4 +15,4 @@ const firebaseConfig = {
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
-console.log('Firebase App Initialized:', app);
+
