@@ -6,10 +6,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Avatar, Dropdown } from 'flowbite-react';
 import { TextInput } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
-import { Modal , Button } from "flowbite-react";
+import { Modal, Button } from "flowbite-react";
 import { FaRegUser } from "react-icons/fa";
 
-import { signoutSuccess , deleteUserFailure , deleteUserStart , deleteUserSuccess } from "../../redux/user/userSlice";
+import { signoutSuccess, deleteUserFailure, deleteUserStart, deleteUserSuccess } from "../../redux/user/userSlice";
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
@@ -99,11 +99,19 @@ export default function Header() {
             </div>
 
             <div className="hidden lg:flex gap-6">
-                {['/', '/about', '/projects'].map((link, index) => (
-                    <Link key={index} to={link} className={`my-2 text-lg ${path === link ? 'text-[#85053a] font-bold' : 'text-gray-200 hover:text-[#85053a] transition duration-300'}`}>
-                        {link === '/' ? 'Home' : link.charAt(1).toUpperCase() + link.slice(2)}
-                    </Link>
-                ))}
+                {['/', '/about', '/profile'].map((link, index) => {
+                    const isProfile = link === '/profile';
+                    return (
+                        <Link
+                            key={index}
+                            to={isProfile ? '/dashboard?tab=profile' : link}
+                            className={`my-2 text-lg ${path === link ? 'text-[#85053a] font-bold' : 'text-gray-200 hover:text-[#85053a] transition duration-300'}`}
+                        >
+                            {isProfile ? 'Profile' : link === '/' ? 'Home' : link.charAt(1).toUpperCase() + link.slice(2)}
+                        </Link>
+                    );
+                })}
+
             </div>
 
             <div className="flex gap-2 items-center">
@@ -123,11 +131,11 @@ export default function Header() {
                     >
                         <Dropdown.Header className="bg-[#85053a] text-white p-4 rounded-t-md flex">
                             <div className="pr-3 flex jusify-center items-center text-center">
-                            <FaRegUser className="text-3xl"/>
+                                <FaRegUser className="text-3xl" />
                             </div>
                             <div>
-                            <span className="text-lg font-semibold">{currentUser.username}</span>
-                            <span className="block text-sm text-gray-400">{currentUser.email}</span>
+                                <span className="text-lg font-semibold">{currentUser.username}</span>
+                                <span className="block text-sm text-gray-400">{currentUser.email}</span>
                             </div>
 
                         </Dropdown.Header>
