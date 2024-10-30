@@ -99,7 +99,7 @@ export default function Search() {
         <h1 className='text-3xl font-semibold sm:border-b border-gray-500 p-3 mt-5 '>
           Posts results:
         </h1>
-        <div className='p-7 flex flex-wrap gap-4'>
+        <div className='justify-center py-7 flex flex-wrap gap-4'>
           {!loading && posts.length === 0 && (
             <p className='text-xl text-gray-500'>No posts found.</p>
           )}
@@ -108,12 +108,16 @@ export default function Search() {
             posts &&
             posts.map((post) => <PostCard key={post._id} post={post} />)}
           {showMore && (
-            <button
-              onClick={handleShowMore}
-              className='text-teal-500 text-lg hover:underline p-7 w-full'
-            >
-              Show More
-            </button>
+            <div className='w-full flex justify-center'>
+
+              <button
+                onClick={handleShowMore}
+                className='px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-[#85053a] text-white hover:opacity-90 cursor-pointer mx-auto'
+              >
+                Show More
+              </button>
+            </div>
+
           )}
         </div>
       </div>

@@ -88,13 +88,13 @@ export default function Home() {
               ))}
             </div>
             <Link
-          to={'/search'}
-          className="mt-5 flex items-center justify-center text-center space-x-2 px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-[#85053a] text-white hover:opacity-90 cursor-pointer mx-auto"
-        >
-          <span>View all posts</span>
-          <FaArrowRight className="h-5 w-5" />
+              to={'/search'}
+              className="mt-5 flex items-center justify-center text-center space-x-2 px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-[#85053a] text-white hover:opacity-90 cursor-pointer mx-auto"
+            >
+              <span>View all posts</span>
+              <FaArrowRight className="h-5 w-5" />
 
-        </Link>
+            </Link>
           </div>
         )}
       </div>
