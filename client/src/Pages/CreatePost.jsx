@@ -83,12 +83,15 @@ export default function CreatePost() {
   };
   return (
     <div className='pt-20 max-w-3xl mx-auto min-h-screen'>
-      <h1 className='text-center text-3xl my-7 font-semibold mb-6'>Create a post</h1>
+      <h1 className='text-center text-3xl my-7 font-semibold mb-3'>Create a post</h1>
+      <div className='w-full flex justify-center text-center items-center mb-5'>
+        <span className='w-[100px] h-[3px] bg-[#85053a]'></span>
+      </div>
       {publishError && (
-          <Alert className='mt-5' color='failure'>
-            {publishError}
-          </Alert>
-        )}
+        <Alert className='mt-5' color='failure'>
+          {publishError}
+        </Alert>
+      )}
       <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
         <div className='flex flex-col gap-4 sm:flex-row justify-between'>
           <TextInput
@@ -102,20 +105,15 @@ export default function CreatePost() {
             }
           />
         </div>
-        <div className='flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3'>
+        <div className='flex gap-4 items-center justify-between border-4 border-[#85053a] border-dotted p-3 max-[500px]:flex-col'>
           <FileInput
             type='file'
             accept='image/*'
             onChange={(e) => setFile(e.target.files[0])}
           />
-          <Button
-            type='button'
-            gradientDuoTone='purpleToBlue'
-            size='sm'
-            outline
-            onClick={handleUpdloadImage}
+          <button onClick={handleUpdloadImage}
             disabled={imageUploadProgress}
-          >
+            className='px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-[#85053a] text-white hover:opacity-90 cursor-pointer'>
             {imageUploadProgress ? (
               <div className='w-16 h-16'>
                 <CircularProgressbar
@@ -126,7 +124,7 @@ export default function CreatePost() {
             ) : (
               'Upload Image'
             )}
-          </Button>
+          </button>
         </div>
         {imageUploadError && <Alert color='failure'>{imageUploadError}</Alert>}
         {formData.image && (
@@ -145,10 +143,9 @@ export default function CreatePost() {
             setFormData({ ...formData, content: value });
           }}
         />
-        <Button type='submit' gradientDuoTone='purpleToPink'>
-          Publish
-        </Button>
-    
+<button type='submit' className='px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-[#85053a] text-white hover:opacity-90 cursor-pointer'>
+Publish
+</button>
       </form>
     </div>
   );
