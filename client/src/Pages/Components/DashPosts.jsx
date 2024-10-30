@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from 'react-redux';
-import { Modal, Table, Button } from 'flowbite-react';
+import { Modal, Button } from 'flowbite-react';
 import { Link } from "react-router-dom";
 
 export default function DashPosts() {
@@ -11,7 +11,7 @@ export default function DashPosts() {
   const [selectedPost, setSelectedPost] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
   const [showMore, setShowMore] = useState(true);
-  const [postLimit, setPostLimit] = useState(9); // Set initial limit to 9 posts
+  const [postLimit, setPostLimit] = useState(9);
   const [showdeleteModal, setShowdeleteModal] = useState(false);
   const [postIdToDelete, setPostIdToDelete] = useState('');
 
@@ -23,7 +23,6 @@ export default function DashPosts() {
         const data = await res.json();
         if (res.ok) {
           setUserPosts(data.posts);
-          // Hide "Show More" button if fewer posts are fetched than requested limit
           if (data.posts.length < postLimit) {
             setShowMore(false);
           }
@@ -41,7 +40,7 @@ export default function DashPosts() {
   }, [currentUser, postLimit]);
 
   const handleShowMore = () => {
-    setPostLimit((prevLimit) => prevLimit + 5); // Increase limit by 5 on each click
+    setPostLimit((prevLimit) => prevLimit + 5);
   };
 
   const openModal = (post) => {
@@ -70,6 +69,7 @@ export default function DashPosts() {
         setUserPosts((prev) =>
           prev.filter((post) => post._id !== postIdToDelete)
         );
+        closeModal();
       }
     } catch (error) {
       console.log(error.message);
@@ -80,59 +80,40 @@ export default function DashPosts() {
   if (error) return <h2>Error: {error}</h2>;
 
   return (
-    <div className="pt-20 w-[75%] mx-auto pl-[10%]">
+    <div className="pt-20 w-[75%] mx-auto pl-[10%] max-[800px]:w-[96%] max-[600px]:pl-[13%]">
       {userPosts.length > 0 ? (
         <div className="mt-4">
-          <table className="hidden w-full border-collapse md:table">
-            <thead>
-              <tr className="bg-gray-200">
-                <th className="border px-4 py-2 text-left">Index</th>
-                <th className="border px-4 py-2 text-left">Title</th>
-                <th className="border px-4 py-2 text-left">Posted On</th>
-                <th className="border px-4 py-2 text-left">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {userPosts.map((post, index) => (
-                <tr key={post._id} className="border-b hover:bg-gray-100">
-                  <td className="border px-4 py-2">{index + 1}</td>
-                  <td className="border px-4 py-2">{post.title}</td>
-                  <td className="border px-4 py-2">{new Date(post.createdAt).toLocaleDateString()}</td>
-                  <td className="border px-4 py-2">
-                    <button
-                      className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-                      onClick={() => openModal(post)}
-                    >
-                      Show Details
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          {/* Mobile view */}
-          <div className="md:hidden">
-            {userPosts.map((post, index) => (
-              <div key={post._id} className="mb-4 p-4 border rounded-lg shadow-sm hover:bg-gray-100">
-                <p><strong>Index:</strong> {index + 1}</p>
-                <p><strong>Title:</strong> {post.title}</p>
-                <p><strong>Posted On:</strong> {new Date(post.createdAt).toLocaleDateString()}</p>
-                <div className="mt-2">
-                  <button
-                    className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 mr-2"
-                    onClick={() => openModal(post)}
-                  >
-                    Show Details
-                  </button>
-                </div>
+          {userPosts.map((post, index) => (
+            <div
+              key={post._id}
+              className="flex flex-row mb-4 p-4 border border-[#85053a] rounded-lg shadow-sm hover:bg-[#fff0f6] max-[600px]:p-[2px] max-[600px]:flex-col"
+            >
+              <div className="w-1/3 p-2 max-[600px]:w-[100%] max-[600px]:p-[2px]">
+                <img
+                  src={post.image || "/placeholder.jpg"}
+                  alt={post.title}
+                  className="w-full h-auto rounded-lg max-[1000px]:h-full"
+                />
               </div>
-            ))}
-          </div>
+              <div className="w-2/3 p-2 flex flex-col justify-between max-[600px]:w-[100%] max-[600px]:p-[2px]">
+                <div className="pt-5">
+                  <p className="mb-3"><strong>Index:</strong> {index + 1}</p>
+                  <p className="mb-3"><strong>Title:</strong> {post.title}</p>
+                  <p className="mb-3"><strong>Posted On:</strong> {new Date(post.createdAt).toLocaleDateString()}</p>
+                </div>
+                <button
+                  className="px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-[#85053a] text-white hover:opacity-90 cursor-pointer"
+                  onClick={() => openModal(post)}
+                >
+                  Show Details
+                </button>
+              </div>
+            </div>
+          ))}
           {showMore && (
             <button
               onClick={handleShowMore}
-              className='w-full text-teal-500 self-center text-sm py-7'
+              className='mt-3 mb-3 flex mx-auto px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-[#85053a] text-white hover:opacity-90 cursor-pointer'
             >
               Show more
             </button>
@@ -142,37 +123,37 @@ export default function DashPosts() {
         <p>No posts found.</p>
       )}
 
-      {/* Modal for showing post details */}
-      {isModalOpen && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 h-full pt-20">
+      {/* Modal for showing post details with Update and Delete buttons */}
+      {isModalOpen && selectedPost && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 h-full pt-20">
           <div className="bg-white p-6 rounded shadow-lg max-w-md w-full">
             <h2 className="text-2xl font-bold">{selectedPost.title}</h2>
             {selectedPost.image && (
               <img
                 src={selectedPost.image}
                 alt={selectedPost.title}
-                className="mt-2 mb-4 w-full h-auto rounded"
+                className="mt-2 mb-4 w-full h-[220px] rounded"
               />
             )}
-            <p className="mt-2">{selectedPost.content}</p>
-            <p><strong>Posted on:</strong> {new Date(selectedPost.createdAt).toLocaleDateString()}</p>
-            <p><strong>User ID:</strong> {selectedPost.userId}</p>
-            <p><strong>Last Updated:</strong> {new Date(selectedPost.updatedAt).toLocaleDateString()}</p>
-            <div className="mt-4 space-x-2">
-              {/* <button className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
-                Update
-              </button> */}
+            <p className="mt-2">{selectedPost.content.slice(0, 100)}...</p>
+            <Link
+              className='text-indigo-800 text-center pt-1 pb-1 hover:underline'
+              to={`/post/${selectedPost.slug}`}
+            >
+              See full post
+            </Link>
+            <div className="mt-4 flex gap-2">
               <Link
-                className='text-teal-500 hover:underline'
+                className='px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-green-500 text-white hover:bg-green-600'
                 to={`/update-post/${selectedPost._id}`}
               >
-                <span>Update</span>
+                Update
               </Link>
               <button
                 className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
                 onClick={() => {
                   setShowdeleteModal(true);
-                  setPostIdToDelete(selectedPost._id); // Use selectedPost's ID
+                  setPostIdToDelete(selectedPost._id);
                 }}
               >
                 Delete
@@ -188,7 +169,7 @@ export default function DashPosts() {
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
+      {/* Confirmation Modal for Delete */}
       <Modal
         show={showdeleteModal}
         onClose={() => setShowdeleteModal(false)}
