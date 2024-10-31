@@ -142,7 +142,10 @@ export default function Header() {
                         <Link to={'/dashboard?tab=profile'}>
                             <Dropdown.Item className="hover:bg-gray-700 transition duration-200">Profile</Dropdown.Item>
                         </Link>
+                        <Link to='/create-post'>
                         <Dropdown.Item className="hover:bg-gray-700 transition duration-200">Add Blog</Dropdown.Item>
+                        </Link>
+                       
                         <Dropdown.Item className="hover:bg-gray-700 transition duration-200" onClick={handleSignout}>Logout</Dropdown.Item>
                         <Dropdown.Divider className="border-gray-600" />
                         <Dropdown.Item className="text-red-500 hover:bg-red-600 transition duration-200" onClick={() => setShowModal(true)}>Delete Account</Dropdown.Item>
@@ -161,13 +164,22 @@ export default function Header() {
                 {isOpen ? <AiOutlineClose /> : <AiOutlineMenu />}
             </button>
 
-            <div className={`absolute bg-white transition-all duration-300 ease-in-out ${isOpen ? 'mt-[20px] top-16 right-0 w-full h-auto max-[600px]:mt-[-5px]' : 'top-16 right-0 w-0 h-0 overflow-hidden'} bg-gray-50 text-gray-700 rounded-lg shadow-lg`}>
+            <div className={`absolute bg-white transition-all duration-300 ease-in-out ${isOpen ? 'mt-[20px] top-16 right-0 w-full h-auto' : 'top-16 right-0 w-0 h-0 overflow-hidden'} bg-gray-50 text-gray-700 rounded-lg shadow-lg`}>
                 <div className="flex flex-col p-4 z-10">
-                    {['/', '/about', '/projects'].map((link, index) => (
-                        <Link key={index} to={link} className={`py-2 text-lg ${path === link ? 'text-blue-500 font-bold' : 'text-gray-600 hover:text-teal-500 transition duration-300'}`}>
-                            {link === '/' ? 'Home' : link.charAt(1).toUpperCase() + link.slice(2)}
-                        </Link>
-                    ))}
+
+                    {['/', '/about', '/profile'].map((link, index) => {
+                        const isProfile = link === '/profile';
+                        return (
+                            <Link
+                                key={index}
+                                to={isProfile ? '/dashboard?tab=profile' : link}
+                                className={`py-2 text-lg ${path === link ? 'text-[#85053a] font-bold' : 'text-gray-900 hover:text-[#85053a] transition duration-300'}`}
+                            >
+                                {isProfile ? 'Profile' : link === '/' ? 'Home' : link.charAt(1).toUpperCase() + link.slice(2)}
+                            </Link>
+                        );
+                    })}
+
                 </div>
             </div>
             <Modal

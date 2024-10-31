@@ -23,42 +23,42 @@ export default function DashSideBar() {
                         <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
                         <button
                             onClick={toggleSidebar}
-                            className="md:hidden p-4 text-2xl text-white pt-1"
+                            className="md:hidden py-4 pr-3 pl-5 text-lg text-white pt-1"
                         >
                             {isOpen ? <FaTimes /> : <FaBars />}
                         </button>
                     </div>
-                    <button className="flex items-center justify-between p-2 my-2 transition-colors duration-200 hover:bg-pink-900 rounded">
+                    <button className="flex items-center justify-between p-1 my-2 transition-colors duration-200 hover:bg-pink-900 rounded">
                         <Link to={'/dashboard?tab=profile'}>
                             Profile
                         </Link>
                         <FaUser className="mr-2 text-xl max-[850px]:mr-2" />
 
                     </button>
-                    <button className="flex items-center justify-between p-2 my-2 transition-colors duration-200 hover:bg-pink-900 rounded">
+                    <button className="flex items-center justify-between p-1 my-2 transition-colors duration-200 hover:bg-pink-900 rounded">
                         <Link to={'/dashboard?tab=posts'}>
                             Blogs
                         </Link>
                         <MdOutlinePostAdd className="mr-2 text-xl max-[850px]:mr-2" />
 
                     </button>
-                    <button className="flex items-center justify-between p-2 my-2 transition-colors duration-200 hover:bg-pink-900 rounded">
-                        <Link to={'/dashboard?tab=dash'}>
-                            Dashboard
-                        </Link>
-                        <MdDashboard className="mr-2 text-xl max-[850px]:mr-2" />
-
-                    </button>
                     {currentUser.isAdmin && (
                         <>
-                            <button className="flex items-center justify-between p-2 my-2 transition-colors duration-200 hover:bg-pink-900 rounded">
+                            <button className="flex items-center justify-between p-1 my-2 transition-colors duration-200 hover:bg-pink-900 rounded">
                                 <Link to={'/dashboard?tab=users'}>
                                     Users
                                 </Link>
                                 <PiUsersFill className="mr-2 text-xl max-[850px]:mr-2" />
 
                             </button>
-                            <button className="flex items-center justify-between p-2 my-2 transition-colors duration-200 hover:bg-pink-900 rounded">
+                            <button className="flex items-center justify-between p-1 my-2 transition-colors duration-200 hover:bg-pink-900 rounded">
+                                <Link to={'/dashboard?tab=dash'}>
+                                    Dashboard
+                                </Link>
+                                <MdDashboard className="mr-2 text-xl max-[850px]:mr-2" />
+
+                            </button>
+                            <button className="flex items-center justify-between p-1 my-2 transition-colors duration-200 hover:bg-pink-900 rounded">
                                 <Link to={'/dashboard?tab=comments'}>
                                     Comments
                                 </Link>

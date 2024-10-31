@@ -45,7 +45,7 @@ export default function DashUsers() {
   };
 
   return (
-    <div className="flex flex-col items-center pt-24 p-6 min-h-screen ml-[14%] w-[82%] max-[500px]:w-[92%]">
+    <div className="flex flex-col items-center pt-24 p-6 min-h-screen max-[700px]:ml-[10%] ml-[15%] w-[82%] max-[500px]:w-[92%]">
       {currentUser.isAdmin && users.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl ">
           {users.map((user) => (

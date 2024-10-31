@@ -72,9 +72,12 @@ export default function Search() {
   return (
     <div className='flex flex-col md:flex-row'>
       <div className='w-full'>
-        <h1 className='text-3xl font-semibold sm:border-b border-gray-500 p-3 mt-5 '>
-          Posts results:
+        <h1 className='pt-20 text-center text-3xl font-semibold sm:border-b border-gray-500 p-3 mt-5 '>
+          Posts results
         </h1>
+        <div className='w-full flex justify-center text-center items-center mt-2'>
+              <span className='w-[100px] h-[3px] bg-[#85053a]'></span>
+            </div>
         <div className='justify-center py-7 flex flex-wrap gap-4'>
           {!loading && posts.length === 0 && (
             <p className='text-xl text-gray-500'>No posts found.</p>

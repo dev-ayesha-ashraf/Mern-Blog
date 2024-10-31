@@ -140,7 +140,7 @@ export default function DashProfile() {
         }
     };
     return (
-        <div className="max-w-lg mx-auto text-center rounded-lg max-[650px]:ml-[10vw] max-[450px]:ml-[17vw] pt-[15vh]">
+        <div className="max-w-lg mx-auto text-center rounded-lg max-[650px]:ml-[10vw] max-[450px]:ml-[12vw] pt-[15vh]">
             <h1 className="my-6 text-center font-semibold text-2xl md:text-3xl text-indigo-800">Profile</h1>
             <form className="flex flex-col space-y-6" onSubmit={handleSubmit}>
                 <input type="file" accept="image/*" onChange={handleImageChange} ref={filePickerRef} className="hidden" />
@@ -221,11 +221,11 @@ export default function DashProfile() {
                     </button>
                 </Link>
 
-                <div className="flex justify-between items-center mt-4 text-sm md:text-base text-gray-600">
-                    <span className="cursor-pointer hover:text-red-500 transition duration-300" onClick={() => setShowModal(true)}>
+                <div className="flex justify-evenly items-center mt-4 text-lg text-gray-600">
+                    <span className="cursor-pointer hover:text-red-500 transition duration-300 mb-10" onClick={() => setShowModal(true)}>
                         Delete Account
                     </span>
-                    <span className="cursor-pointer hover:text-blue-500 transition duration-300" onClick={handleSignout}>
+                    <span className="cursor-pointer hover:text-blue-500 transition duration-300 mb-10" onClick={handleSignout}>
                         Sign Out
                     </span>
                 </div>

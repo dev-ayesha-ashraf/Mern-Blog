@@ -94,7 +94,7 @@ export default function CreatePost() {
           {publishError}
         </Alert>
       )}
-      <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
+      <form className='flex flex-col gap-4 pl-2 pr-2' onSubmit={handleSubmit}>
         <TextInput
           type='text'
           placeholder='Title'
@@ -145,7 +145,7 @@ export default function CreatePost() {
         />
         <button
           type='submit'
-          className='px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-[#85053a] text-white hover:opacity-90 cursor-pointer'
+          className='mt-4 mb-5 px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-[#85053a] text-white hover:opacity-90 cursor-pointer'
           disabled={isSubmitting}>
           {isSubmitting ? 'Publishing...' : 'Publish'}
         </button>

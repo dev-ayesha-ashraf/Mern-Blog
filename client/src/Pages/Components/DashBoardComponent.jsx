@@ -67,8 +67,8 @@ export default function DashboardComp() {
     }
   }, [currentUser]);
   return (
-    <div className='pt-[10%] md:mx-auto'>
-      <div className='flex-wrap flex gap-4 justify-center'>
+    <div className='max-[500px]:pt-[27%] max-[700px]:pt-[20%] pt-[15%] md:mx-auto pr-[7%]'>
+      <div className='flex-wrap flex gap-4 justify-center pl-[12%]'>
         <div className='flex flex-col p-3 dark:bg-slate-800 gap-4 md:w-72 w-full rounded-md shadow-md'>
           <div className='flex justify-between'>
             <div className=''>
@@ -120,9 +120,9 @@ export default function DashboardComp() {
           </div>
         </div>
       </div>
-      <div className='flex flex-wrap gap-4 py-3 mx-auto justify-center'>
+      <div className='flex flex-wrap gap-4 py-3 mx-auto justify-center ml-[10%] max-[1100px]:ml-[15%] '>
         <div className='flex flex-col w-full md:w-auto shadow-md p-2 rounded-md dark:bg-gray-800'>
-          <div className='flex justify-between  p-3 text-sm font-semibold'>
+          <div className='flex justify-between  p-3 text-sm font-semibold '>
             <h1 className='text-center p-2'>Recent users</h1>
             <button className='px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-[#85053a] text-white hover:opacity-90 cursor-pointer'>
               <Link to={'/dashboard?tab=users'}>See all</Link>
