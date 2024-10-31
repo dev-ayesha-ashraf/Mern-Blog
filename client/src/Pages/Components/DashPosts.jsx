@@ -80,7 +80,7 @@ export default function DashPosts() {
   if (error) return <h2>Error: {error}</h2>;
 
   return (
-    <div className="pt-20 w-[75%] mx-auto pl-[10%] max-[800px]:w-[96%] max-[600px]:pl-[9%]">
+    <div className="pt-20 w-[75%] mx-auto pl-[10%] max-[800px]:w-[96%] max-[600px]:pl-[13%]">
       {userPosts.length > 0 ? (
         <div className="mt-4">
           {userPosts.map((post, index) => (
