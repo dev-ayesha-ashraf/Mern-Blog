@@ -3,8 +3,6 @@ import { initializeApp } from "firebase/app";
 
 // Log to check if the variable is defined
 
-console.log("Firebase API Key:", import.meta.env.VITE_FIREBASE_API_KEY);
-
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
