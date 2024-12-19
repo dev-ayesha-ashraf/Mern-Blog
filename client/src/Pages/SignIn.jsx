@@ -1,65 +1,56 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import registerImage from "/src/register.avif"
 import { useNavigate } from 'react-router-dom';
-import { Alert, Spinner } from 'flowbite-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice';
-import Oauth from './Components/Oauth';
+
 export default function SignIn() {
-  const [formData, setFormData] = useState({});
-  const { loading, error: errorMessage } = useSelector(state => state.user)
+  const [formData, setFormData] = useState({ username: '', password: '' });
+  const { loading, error: errorMessage } = useSelector(state => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value.trim() })
+    setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.email || !formData.password) {
-      return dispatch(signInFailure('Please Fill Out All The Fields'))
+    if (!formData.username || !formData.password) {
+      return dispatch(signInFailure('Please Fill Out All The Fields'));
     }
+
     try {
-      dispatch(signInSuccess());
+      dispatch(signInStart());
+
       const res = await fetch('/api/auth/signin', {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
-      const responseData = await res.json();
-      if (!res.ok) {
-        dispatch(signInFailure(responseData.message))
+      if (res.ok) {
+        const data = await res.json();
+        localStorage.setItem("token", data.token); 
+        dispatch(signInSuccess(data));  
+        navigate('/deposit'); 
+      } else {
+        const error = await res.json();
+        dispatch(signInFailure(error.message || 'Something went wrong'));
       }
-      else {
-        dispatch(signInSuccess(responseData))
-        navigate('/');
-        console.log('Login successful');
-      }
-
     } catch (error) {
-      dispatch(signInFailure(error.message))
+      dispatch(signInFailure(error.message));
     }
   };
 
-
-
-
-
   return (
-    <div className="relative grid items-center justify-center min-h-screen  pt-[15vh]">
+    <div className="relative grid items-center justify-center min-h-screen pt-[15vh] bg-purple-900">
       <motion.div
-        className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full"
+        className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full max-[900px]:w-3/4 mx-auto"
         initial={{ scale: 0.8 }}
         animate={{ scale: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <img
-          src={registerImage}
-          alt="Signup"
-          className="w-full h-32 object-cover rounded-lg mb-4"
-        />
         <h2 className="text-center text-2xl font-semibold text-gray-700 mb-4">Log In</h2>
         {errorMessage && (
           <div className="flex items-center bg-orange-500 text-white text-sm font-bold px-4 py-3 rounded shadow-md my-4" role="alert">
@@ -71,9 +62,10 @@ export default function SignIn() {
         )}
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
-            type="email"
-            id='email'
-            placeholder="Email"
+            type="text"
+            id='username'
+            placeholder="Username"
+            value={formData.username}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
           />
@@ -81,7 +73,7 @@ export default function SignIn() {
             type="password"
             id='password'
             placeholder="Password"
-
+            value={formData.password}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
           />
@@ -90,33 +82,20 @@ export default function SignIn() {
             type="submit"
             className="w-full py-2 bg-orange-500 text-white rounded hover:bg-orange-400 transition duration-300"
           >
-            {
-              loading ? (
-                <>
-                  <Spinner size='sm' />
-                  <span className='pl-3'>Loading...</span>
-                </>
-
-              ) : 'Log In'
-            }
+            {loading ? (
+              <>
+                <Spinner size='sm' />
+                <span className='pl-3'>Loading...</span>
+              </>
+            ) : 'Log In'}
           </button>
         </form>
-
-        <div className="text-center mt-4">
-          <Oauth />
-        </div>
-
         <div className="text-center mt-4">
           <p className="text-gray-600">
             Don't have an account? <a href="/sign-up" className="text-orange-500 font-semibold">Sign Up</a>
           </p>
         </div>
       </motion.div>
-      <div>
-
-
-      </div>
     </div>
-
   );
 }

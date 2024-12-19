@@ -1,25 +1,22 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import registerImage from "/src/register.avif"
-import googleIcon from "/src/googleIcon.webp"
 import { useNavigate } from 'react-router-dom';
-import { Alert, Spinner } from 'flowbite-react';
-import Oauth from './Components/Oauth';
-import { useSelector } from 'react-redux';
+import { Spinner } from 'flowbite-react';
 
 export default function SignUp() {
   const [formData, setFormData] = useState({});
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
-  const theme = useSelector((state) => state.theme.currentTheme);
   const navigate = useNavigate();
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() })
   }
 
   const handleSubmit = async (e) => {
+    console.log('Form Data:', formData);
+
     e.preventDefault();
-    if (!formData.username || !formData.email || !formData.password) {
+    if (!formData.username || !formData.password) {
       return setErrorMessage('Please Fill Out All The Fields.')
     }
     try {
@@ -46,7 +43,7 @@ export default function SignUp() {
       setErrorMessage(error.message);
     }
     finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
@@ -54,20 +51,15 @@ export default function SignUp() {
 
 
   return (
-    <div className="relative grid items-center justify-center min-h-screen pt-[15vh] z-0"
-  >
+    <div className="relative grid items-center justify-center min-h-screen pt-[15vh] z-0 bg-purple-900"
+    >
 
       <motion.div
-        className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full"
+        className="bg-white rounded-lg shadow-lg p-8 max-w-md max-[900px]:w-3/4  mx-auto"
         initial={{ scale: 0.8 }}
         animate={{ scale: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <img
-          src={registerImage}
-          alt="Signup"
-          className="w-full h-32 object-cover rounded-lg mb-4"
-        />
         <h2 className="text-center text-2xl font-semibold text-gray-700 mb-4">Create an Account</h2>
         {errorMessage && (
           <div className="flex items-center bg-orange-500 text-white text-sm font-bold px-4 py-3 rounded shadow-md my-4" role="alert">
@@ -86,13 +78,7 @@ export default function SignUp() {
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
           />
-          <input
-            type="email"
-            id='email'
-            placeholder="Email"
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
-          />
+
           <input
             type="password"
             id='password'
@@ -117,10 +103,6 @@ export default function SignUp() {
             }
           </button>
         </form>
-
-        <div className="text-center mt-4">
-          <Oauth />
-        </div>
 
         <div className="text-center mt-4">
           <p className="text-gray-600">

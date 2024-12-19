@@ -1,5 +1,4 @@
-import { Alert, Button, FileInput, TextInput } from 'flowbite-react';
-import ReactQuill from 'react-quill';
+import { Alert, FileInput, TextInput } from 'flowbite-react';
 import 'react-quill/dist/quill.snow.css';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { app } from '../firebase';
@@ -80,14 +79,14 @@ export default function CreatePost() {
   };
 
   return (
-    <div className='pt-20 max-w-3xl mx-auto min-h-screen'>
+    <div className='pt-20 max-w-3xl mx-auto min-h-screen max-[1000px]:pl-10'>
       <Helmet>
-        <title>Create a Post</title>
+        <title>Add a product</title>
         <meta name="description" content="Create a new post to share your thoughts and ideas." />
       </Helmet>
-      <h1 className='text-center text-3xl my-7 font-semibold mb-3'>Create a Post</h1>
+      <h1 className='text-center text-3xl my-7 font-semibold mb-3'>Add a product</h1>
       <div className='w-full flex justify-center text-center items-center mb-5'>
-        <span className='w-[100px] h-[3px] bg-[#85053a]'></span>
+        <span className='w-[100px] h-[3px] bg-purple-900'></span>
       </div>
       {publishError && (
         <Alert className='mt-5' color='failure'>
@@ -104,7 +103,7 @@ export default function CreatePost() {
           value={formData.title}
           onChange={(e) => setFormData({ ...formData, title: e.target.value })}
         />
-        <div className='flex gap-4 items-center justify-between border-4 border-[#85053a] border-dotted p-3 max-[500px]:flex-col'>
+        <div className='flex gap-4 items-center justify-between border-4 border-purple-900 border-dotted p-3 max-[500px]:flex-col'>
           <FileInput
             type='file'
             accept='image/*'
@@ -114,7 +113,7 @@ export default function CreatePost() {
             type='button'
             onClick={handleUploadImage}
             disabled={imageUploadProgress !== null}
-            className='px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-[#85053a] text-white hover:opacity-90 cursor-pointer'>
+            className='px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-purple=900 text-white hover:opacity-90 cursor-pointer'>
             {imageUploadProgress ? (
               <div className='w-16 h-16'>
                 <CircularProgressbar
@@ -135,19 +134,17 @@ export default function CreatePost() {
             className='w-full h-72 object-cover'
           />
         )}
-        <ReactQuill
-          theme='snow'
-          placeholder='Write something...'
-          className='h-72 mb-12'
-          required
+        <input
+          type="number"
           value={formData.content}
-          onChange={(value) => setFormData({ ...formData, content: value })}
+          onChange={(e) => setFormData({ ...formData, content: e.target.value })} placeholder='price'
         />
+
         <button
           type='submit'
-          className='mt-4 mb-5 px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-[#85053a] text-white hover:opacity-90 cursor-pointer'
+          className='mt-4 mb-5 px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-purple-900 text-white hover:opacity-90 cursor-pointer'
           disabled={isSubmitting}>
-          {isSubmitting ? 'Publishing...' : 'Publish'}
+          {isSubmitting ? 'Posting...' : 'Post'}
         </button>
       </form>
     </div>

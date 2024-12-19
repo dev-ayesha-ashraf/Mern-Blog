@@ -1,5 +1,4 @@
 import { Alert, FileInput, TextInput } from 'flowbite-react';
-import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import {
   getDownloadURL,
@@ -13,6 +12,7 @@ import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { Helmet } from 'react-helmet';
 
 export default function UpdatePost() {
   const [file, setFile] = useState(null);
@@ -108,10 +108,16 @@ export default function UpdatePost() {
     }
   };
   return (
-    <div className='pt-20 max-w-3xl mx-auto min-h-screen'>
+    
+    <div className='pt-20 max-w-3xl mx-auto min-h-screen max-[1000px]:pl-[50px]'>
+      <Helmet>
+        <title>UpdateProduct - harmanım</title>
+        <meta name="description" content="Welcome to Techie Blog, where you'll find a variety of articles and tutorials on many topics." />
+        <meta name="keywords" content="blog, tech, tutorials, articles, programming" />
+      </Helmet>
       <h1 className='text-center text-3xl my-7 font-semibold mb-3'>Update Post</h1>
       <div className='w-full flex justify-center text-center items-center mb-5'>
-        <span className='w-[100px] h-[3px] bg-[#85053a]'></span>
+        <span className='w-[100px] h-[3px] bg-purple-900'></span>
       </div>
       {publishError && (
         <Alert className='mt-5' color='failure'>
@@ -132,7 +138,7 @@ export default function UpdatePost() {
             value={formData.title}
           />
         </div>
-        <div className='flex gap-4 items-center justify-between border-4 border-[#85053a] border-dotted p-3 max-[500px]:flex-col'>
+        <div className='flex gap-4 items-center justify-between border-4 border-purple-900 border-dotted p-3 max-[500px]:flex-col'>
           <FileInput
             type='file'
             accept='image/*'
@@ -140,7 +146,7 @@ export default function UpdatePost() {
           />
           <button onClick={handleUpdloadImage}
             disabled={imageUploadProgress}
-            className='px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-[#85053a] text-white hover:opacity-90 cursor-pointer'>
+            className='px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-purple-900 text-white hover:opacity-90 cursor-pointer'>
             {imageUploadProgress ? (
               <div className='w-16 h-16'>
                 <CircularProgressbar
@@ -162,18 +168,13 @@ export default function UpdatePost() {
             className='w-full h-72 object-cover'
           />
         )}
-        <ReactQuill
-          theme='snow'
+        <input
+          type="number"
           value={formData.content}
-          placeholder='Write something...'
-          className='h-72 mb-12'
-          required
-          onChange={(value) => {
-            setFormData({ ...formData, content: value });
-          }}
+          onChange={(e) => setFormData({ ...formData, content: e.target.value })} placeholder='price'
         />
-        <button type='submit' className='px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-[#85053a] text-white hover:opacity-90 cursor-pointer'>
-          Update post
+        <button type='submit' className='px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-purple-900 text-white hover:opacity-90 cursor-pointer'>
+          Update product
         </button>
       </form>
     </div>

@@ -1,16 +1,15 @@
-import { Button, Spinner } from 'flowbite-react';
+import { Spinner } from 'flowbite-react';
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { Helmet } from 'react-helmet'; 
-import CommentSection from './Components/CommentSection';
-import PostCard from './Components/PostCard';
+import { Helmet } from 'react-helmet';
+import { useParams } from 'react-router-dom';
+
 
 export default function PostPage() {
   const { postSlug } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [post, setPost] = useState(null);
-  const [recentPosts, setRecentPosts] = useState(null);
+  const [recentPosts, setRecentPosts] = useState([]);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -18,21 +17,25 @@ export default function PostPage() {
         setLoading(true);
         const res = await fetch(`/api/post/getposts?slug=${postSlug}`);
         const data = await res.json();
+
         if (!res.ok) {
-          setError(true);
-          setLoading(false);
-          return;
+          throw new Error(data.message || "Failed to fetch the post.");
         }
-        if (res.ok) {
+
+        if (Array.isArray(data.posts) && data.posts.length > 0) {
           setPost(data.posts[0]);
-          setLoading(false);
           setError(false);
+        } else {
+          throw new Error("Post data is unavailable.");
         }
       } catch (error) {
         setError(true);
+        console.error("Error fetching post:", error.message);
+      } finally {
         setLoading(false);
       }
     };
+
     fetchPost();
   }, [postSlug]);
 
@@ -41,13 +44,15 @@ export default function PostPage() {
       try {
         const res = await fetch(`/api/post/getposts?limit=3`);
         const data = await res.json();
-        if (res.ok) {
+
+        if (res.ok && Array.isArray(data.posts)) {
           setRecentPosts(data.posts);
         }
       } catch (error) {
-        console.log(error.message);
+        console.error("Error fetching recent posts:", error.message);
       }
     };
+
     fetchRecentPosts();
   }, []);
 
@@ -58,45 +63,59 @@ export default function PostPage() {
       </div>
     );
   }
-  const title = post ? post.title : "Loading...";
-  const description = post ? post.content.substring(0, 160) + "..." : "Loading post content...";
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center min-h-screen text-center">
+        <p className="text-red-600">An error occurred while loading the post. Please try again later.</p>
+      </div>
+    );
+  }
+
+  const title = post?.title || "Loading...";
+
+  const description =
+    post && typeof post.content === "string"
+      ? `${post.content.substring(0, 160)}...`
+      : typeof post.content === "number"
+        ? `Price: ${post.content}`
+        : "Loading post content...";
 
   return (
-    <main className='pt-20 flex flex-col max-w-6xl mx-auto min-h-screen'>
+    <main className="pt-20 flex flex-col max-w-6xl mx-auto min-h-screen pl-20">
       <Helmet>
         <title>{title}</title>
         <meta name="description" content={description} />
       </Helmet>
-      <h1 className='text-3xl mt-10 text-center max-w-2xl mx-auto lg:text-4xl text-indigo-800'>
-        {post && post.title}
+
+      {/* Post Title */}
+      <h1 className="text-3xl mt-10 text-center max-w-2xl mx-auto lg:text-4xl text-indigo-800">
+        {post?.title || "Post Title"}
       </h1>
-      <div className='w-full flex justify-center text-center items-center mt-2'>
-        <span className='w-[100px] h-[3px] bg-[#85053a]'></span>
+
+      {/* Separator */}
+      <div className="w-full flex justify-center items-center mt-2">
+        <span className="w-[100px] h-[3px] bg-[#85053a]"></span>
       </div>
-      <img
-        src={post && post.image}
-        alt={post && post.title}
-        className='mt-3 p-3 max-h-[600px] w-full object-cover'
-      />
-      <div className='flex justify-between p-3 border-b border-slate-500 mx-auto w-full max-w-2xl text-xs'>
-        <span>{post && new Date(post.createdAt).toLocaleDateString()}</span>
-        <span className='italic'>
-          {post && (post.content.length / 1000).toFixed(0)} mins read
-        </span>
+
+      {/* Post Image */}
+      {post?.image && (
+        <img
+          src={post.image}
+          alt={post.title || "Post Image"}
+          className="mt-3 p-3 max-h-[600px] w-5/6 object-cover"
+        />
+      )}
+
+      {/* Post Date */}
+      <div className="flex justify-between p-3 border-b border-slate-500 mx-auto w-full max-w-2xl text-xs">
+        <span>{post?.createdAt && new Date(post.createdAt).toLocaleDateString()}</span>
       </div>
-      <div
-        className='p-3 max-w-2xl mx-auto w-full post-content'
-        dangerouslySetInnerHTML={{ __html: post && post.content }}
-      ></div>
-      <CommentSection postId={post._id} />
-      <div className='flex flex-col justify-center items-center mb-5'>
-        <h1 className='text-3xl font-semibold text-center mt-5'>Recent articles</h1>
-        <div className='w-full flex justify-center text-center items-center mt-2 mb-10'>
-          <span className='w-[100px] h-[3px] bg-[#85053a]'></span>
-        </div>
-        <div className='flex flex-wrap gap-5 mt-5 justify-center'>
-          {recentPosts && recentPosts.map((post) => <PostCard key={post._id} post={post} />)}
-        </div>
+      <div className="p-3 max-w-2xl mx-auto w-full post-content">
+        {typeof post.content === "string" && (
+          <p dangerouslySetInnerHTML={{ __html: post.content }} />
+        )}
+        {typeof post.content === "number" && <p>Price: {post.content}</p>}
       </div>
     </main>
   );

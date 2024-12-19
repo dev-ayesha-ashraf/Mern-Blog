@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from 'react-redux';
 import { Modal, Button } from 'flowbite-react';
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 export default function DashPosts() {
   const { currentUser } = useSelector((state) => state.user);
@@ -81,6 +82,11 @@ export default function DashPosts() {
 
   return (
     <div className="pt-20 w-[75%] mx-auto pl-[10%] max-[800px]:w-[96%] max-[600px]:pl-[13%]">
+          <Helmet>
+        <title>Product - harmanım</title>
+        <meta name="description" content="Welcome to Techie Blog, where you'll find a variety of articles and tutorials on many topics." />
+        <meta name="keywords" content="blog, tech, tutorials, articles, programming" />
+      </Helmet>
       {userPosts.length > 0 ? (
         <div className="mt-4">
           {userPosts.map((post, index) => (
@@ -102,7 +108,7 @@ export default function DashPosts() {
                   <p className="mb-3"><strong>Posted On:</strong> {new Date(post.createdAt).toLocaleDateString()}</p>
                 </div>
                 <button
-                  className="px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-[#85053a] text-white hover:opacity-90 cursor-pointer"
+                  className="px-6 py-2 font-bold rounded-md shadow-lg transition duration-300 bg-purple-900 text-white hover:opacity-90 cursor-pointer"
                   onClick={() => openModal(post)}
                 >
                   Show Details
@@ -123,9 +129,8 @@ export default function DashPosts() {
         <p>No posts found.</p>
       )}
 
-      {/* Modal for showing post details with Update and Delete buttons */}
       {isModalOpen && selectedPost && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 h-full pt-20">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 h-full pt-20 max-[600px]:pl-[40px]">
           <div className="bg-white p-6 rounded shadow-lg max-w-md w-full">
             <h2 className="text-2xl font-bold">{selectedPost.title}</h2>
             {selectedPost.image && (
@@ -135,7 +140,9 @@ export default function DashPosts() {
                 className="mt-2 mb-4 w-full h-[220px] rounded"
               />
             )}
-            <p className="mt-2">{selectedPost.content.slice(0, 100)}...</p>
+            <p className="mt-2">
+              {typeof selectedPost.content === "string" ? selectedPost.content.slice(0, 100) + "..." : "Content unavailable"}
+            </p>
             <Link
               className='text-indigo-800 text-center pt-1 pb-1 hover:underline'
               to={`/post/${selectedPost.slug}`}
@@ -169,7 +176,6 @@ export default function DashPosts() {
         </div>
       )}
 
-      {/* Confirmation Modal for Delete */}
       <Modal
         show={showdeleteModal}
         onClose={() => setShowdeleteModal(false)}
