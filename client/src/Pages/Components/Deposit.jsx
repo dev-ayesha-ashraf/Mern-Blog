@@ -106,7 +106,7 @@ export const DepositWithdraw = () => {
             </div>
 
             <div className="mb-12 text-center bg-purple-900">
-                <h3 className="text-2xl font-semibold mb-4 text-white sm:text-xl sm:mb-6 md:text-2xl md:mb-8">
+                <h3 className="text-2xl font-semibold mb-4 text-white md:mb-8 max-[700px]:text-xl max-[700px]:font-normal max-[700px]:px-10 pt-5">
                     Satıcı olmak için lütfen bilgilendirme sayfasını okuyunuz.
                 </h3>
 
@@ -202,11 +202,11 @@ export const DepositWithdraw = () => {
                             kapat
                         </button>
                         {insufficientBalance && (
-                            <div className="bg-red-500 text-white py-3 mt-4 rounded flex pl-2">
+                            <div className="bg-red-500 text-white py-3 mt-4 rounded flex pl-2 max-[600px]:ml-10">
                                 <button onClick={closeAlert} >
                                     <FaTimes className="text-2xl cursor-pointer" />
                                 </button>
-                                <h4 className="text-center pl-2">Bakiye Yetersiz, </h4>
+                                <h4 className="text-center pl-2 ">Bakiye Yetersiz, </h4>
 
                             </div>
                         )}
@@ -215,13 +215,13 @@ export const DepositWithdraw = () => {
             )}
 
             {isAlertVisible === 'satıcı ol' && (
-                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg- bg-opacity-50">
-                    <div className="bg-red-700 text-white p-6 rounded-lg w-1/3 text-center shadow-2xl max-[600px]:w-[95%] max-[600px]:p-1">
+                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg- bg-opacity-50 max-[600px]:ml-10">
+                    <div className="bg-red-700 text-white p-6 rounded-lg w-1/3 text-center shadow-2xl max-[600px]:w-[95%]">
                         <h3 className="text-xl font-bold mb-4 text-yellow-400">Satıcı Ol Uyarısı</h3>
-                        <span className='text-bold cursor-pointer text-xl' onClick={handleInfoPage}>
+                        <span className='text-bold cursor-pointer text-xl max-[600px]:text-sm' onClick={handleInfoPage}>
                             Teminat yetersiz,  Lütfen BİLGİLENDİRME sayfasını okuyunuz.
                         </span>
-                        <button onClick={closeAlert} className="bg-red-500 hover:bg-red-400 text-white px-4 py-2 rounded">
+                        <button onClick={closeAlert} className="block mx-auto bg-red-500 hover:bg-red-400 text-white px-4 py-2 rounded">
                             kapat
                         </button>
                     </div>

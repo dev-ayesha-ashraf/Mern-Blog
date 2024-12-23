@@ -21,7 +21,7 @@ export default function DashSideBar() {
 
                 <div className="flex flex-col h-full p-4 max-[850px]:p-1">
                     <button className="flex items-center justify-between p-1 my-2 transition-colors duration-200">
-                        <Link to={"/deposit"}>   <FaBox className="text-xl" /></Link>
+                        <Link to={"/"}>   <FaBox className="text-xl" /></Link>
 
                     </button>
                     <button className="flex items-center justify-between p-1 my-2 transition-colors duration-200">

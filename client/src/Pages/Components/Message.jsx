@@ -10,37 +10,29 @@ export const Messages = () => {
 
     useEffect(() => {
         const token = localStorage.getItem("token");
-        console.log("Token from localStorage:", token);
-        setIsLoggedIn(!!token);
+        setIsLoggedIn(!!token); // Check if a token exists in localStorage
+        setIsPopupOpen(true);   // Open popup initially on page load
     }, []);
 
     const closePopup = () => {
         setIsPopupOpen(false);
     };
 
-    const openPopup = () => {
-        if (isLoggedIn === null) return;
-        if (isLoggedIn) {
-            setIsPopupOpen(true);
-        } else {
-            alert("You must be logged in to view messages. Please log in first.");
-        }
-    };
-
     if (isLoggedIn === null) {
-        return null;
+        return null; // Wait until the login status is determined
     }
 
     return (
         <div className="bg-purple-900 h-[100vh]">
             <Helmet>
-                <title>message - harmanım</title>
+                <title>Messages - Harmanım</title>
                 <meta name="description" content="Welcome to Techie Blog, where you'll find a variety of articles and tutorials on many topics." />
                 <meta name="keywords" content="blog, tech, tutorials, articles, programming" />
             </Helmet>
+
             <button
                 className="fixed bottom-4 right-4 bg-purple-700 p-3 rounded-full shadow-lg hover:bg-purple-600"
-                onClick={openPopup}
+                onClick={() => setIsPopupOpen(true)}
             >
                 <FaCommentAlt className="text-white text-2xl" />
             </button>
@@ -58,30 +50,41 @@ export const Messages = () => {
                             </button>
                         </div>
 
-                        <div className="bg-purple-600 text-white p-4 rounded-lg shadow-md mb-4">
-                            <div className="flex items-start">
-                                <div className="bg-purple-500 p-2 rounded-full mr-3">
-                                    <FaCommentAlt className="text-white text-xl" />
-                                </div>
-                                <div className="text-sm">
-                                    <p className="font-semibold">
-                                        Aramıza hoş geldin <span className="text-yellow-300"> {currentUser && currentUser.username && (
-                                            <span className="text-lg font-semibold my-4 text-center text-white align-center">
-                                                @{currentUser.username}
+                        {isLoggedIn ? (
+                            <div className="bg-purple-600 text-white p-4 rounded-lg shadow-md mb-4">
+                                <div className="flex items-start">
+                                    <div className="bg-purple-500 p-2 rounded-full mr-3">
+                                        <FaCommentAlt className="text-white text-xl" />
+                                    </div>
+                                    <div className="text-sm">
+                                        <p className="font-semibold">
+                                            Aramıza hoş geldin{" "}
+                                            <span className="text-yellow-300">
+                                                {currentUser && currentUser.username && (
+                                                    <span className="text-lg font-semibold my-4 text-center text-white align-center">
+                                                        @{currentUser.username}
+                                                    </span>
+                                                )}
                                             </span>
-                                        )}</span>, Yeni ve değişen
-                                        dünyaya ayak uydurmak için hazır ol. Her şeyi senin için
-                                        güvenli ve basit tutmaya çalışıyoruz. Sipariş verdikten sonra
-                                        buradan satıcın seninle iletişime geçecek.{" "}
-                                        <span className="underline">BİLGİLENDİRME</span> sayfasını
-                                        okumayı unutma.
-                                    </p>
+                                            , Yeni ve değişen dünyaya ayak uydurmak için hazır ol.
+                                            Her şeyi senin için güvenli ve basit tutmaya çalışıyoruz.
+                                            Sipariş verdikten sonra buradan satıcın seninle iletişime
+                                            geçecek.{" "}
+                                            <span className="underline">BİLGİLENDİRME</span>{" "}
+                                            sayfasını okumayı unutma.
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        ) : (
+                            <div className="bg-gray-700 text-white p-4 rounded-lg shadow-md mb-4">
+                                <p className="font-semibold text-center">
+                                    No messages available.
+                                </p>
+                            </div>
+                        )}
 
-
-                        <div className="flex justify-end ">
+                        <div className="flex justify-end">
                             <button
                                 className="bg-purple-700 text-white py-2 px-4 rounded-lg hover:bg-purple-600"
                                 onClick={closePopup}

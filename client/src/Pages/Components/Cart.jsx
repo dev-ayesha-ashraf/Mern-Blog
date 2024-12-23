@@ -1,45 +1,52 @@
-import React, { useEffect, useState } from 'react';
-import { Helmet } from 'react-helmet';
+import React, { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 
 export const Cart = () => {
   const [cart, setCart] = useState([]);
   const [expressDelivery, setExpressDelivery] = useState(false);
   const [isBalanceSufficient, setIsBalanceSufficient] = useState(true);
-  const [orderStatus, setOrderStatus] = useState("");  
+  const [orderStatus, setOrderStatus] = useState("");
 
-
-  const availableBalance = 0; 
+  const availableBalance = 0;
 
   useEffect(() => {
-    const savedCart = JSON.parse(localStorage.getItem('cart')) || [];
+    const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
     setCart(savedCart);
   }, []);
+  
 
   const calculateTotal = () => {
     const cartTotal = cart.reduce((total, item) => total + item.price * item.count, 0);
-    const commissionFee = 150; 
-    const expressFee = expressDelivery ? 100 : 0; 
+    const commissionFee = 150;
+    const expressFee = expressDelivery ? 100 : 0;
     return cartTotal + commissionFee + expressFee;
   };
+  
 
   const handleNextClick = () => {
     if (calculateTotal() > availableBalance) {
-      setIsBalanceSufficient(false); 
-      setOrderStatus("");  
+      setIsBalanceSufficient(false);
+      setOrderStatus("");
     } else {
       setIsBalanceSufficient(true);
-      setOrderStatus("Siparişiniz İşleniyor..."); 
+      setOrderStatus("Siparişiniz İşleniyor...");
     }
+  };
+
+  const handleRemoveItem = (id) => {
+    const updatedCart = cart.filter((item) => item.id !== id);
+    setCart(updatedCart);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
   return (
     <div className="bg-purple-900 text-center text-white h-[100vh] pt-20">
-          <Helmet>
-        <title>Cart- harmanım</title>
+      <Helmet>
+        <title>Cart - harmanım</title>
         <meta name="description" content="Welcome to Techie Blog, where you'll find a variety of articles and tutorials on many topics." />
         <meta name="keywords" content="blog, tech, tutorials, articles, programming" />
       </Helmet>
-      <h2 className="text-3xl font-bold text-gray-200">alışveriş sepeti</h2>
+      <h2 className="text-3xl font-bold text-gray-200 pt-10">Alışveriş Sepeti</h2>
 
       {cart.length === 0 ? (
         <p className="mt-8 text-lg text-gray-400">Sepet Boş</p>
@@ -47,14 +54,19 @@ export const Cart = () => {
         <div className="mt-8 p-6 bg-white rounded-lg shadow-xl text-gray-800 mx-auto max-w-lg max-[600px]:p-1 max-[600px]:ml-10 max-[600px]:max-w-sm">
           <div>
             {cart.map((item) => (
-             <div key={item.id} className="flex justify-between items-center border-b py-4">
-             <div className="flex flex-col">
-               <span>{item.name}</span>
-               <span className="text-sm text-gray-500">{item.count} adet</span>
-             </div>
-             <span className="font-bold text-gray-900">{(item.price * item.count).toFixed(2)} TL</span>
-           </div>
-           
+              <div key={item.id} className="flex justify-between items-center border-b py-4">
+                <div className="flex flex-col">
+                  <span>{item.name}</span>
+                  <span className="text-sm text-gray-500">{item.count} adet</span>
+                </div>
+                <span className="font-bold text-gray-900">{(item.price * item.count).toFixed(2)} TL</span>
+                <button
+                  onClick={() => handleRemoveItem(item.id)}
+                  className="bg-red-500 text-white text-xs py-1 px-2 rounded-md hover:bg-red-600"
+                >
+                  Kaldır
+                </button>
+              </div>
             ))}
           </div>
 
@@ -106,4 +118,3 @@ export const Cart = () => {
     </div>
   );
 };
-
